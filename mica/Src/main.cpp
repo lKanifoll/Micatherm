@@ -143,7 +143,7 @@ int main(void)
 	pxs.clear();
 	pxs.displayOn();
 	pxs.fillRectangle(0, 0, 160, 128);
-	pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
+	//pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
   /* USER CODE END 2 */
 
   /* Init scheduler */
