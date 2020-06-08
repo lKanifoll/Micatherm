@@ -28,6 +28,9 @@
 #include <Pixels_PPI8.h> 
 #include <Pixels_ST7735.h>
 #include "images.h"
+#include "fonts.h"
+#include "ntc_steinhart.h"
+#include "buttons.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +47,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 Pixels pxs(161, 130);
+button power_key(key1_GPIO_Port, key1_Pin);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,7 +63,7 @@ TIM_HandleTypeDef htim3;
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .stack_size = 128 * 4,
+  .stack_size = 128*4,
   .priority = (osPriority_t) osPriorityNormal
 };
 /* USER CODE BEGIN PV */
@@ -77,6 +81,7 @@ void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 void screen_smooth_transition();
+uint32_t get_raw_adc_meas();
 
 /* USER CODE END PFP */
 
@@ -95,6 +100,15 @@ void screen_smooth_transition()
 		TIM3->CCR1 += 500;
 		HAL_Delay(2);
 	}
+}
+
+uint32_t get_raw_adc_meas()
+{
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, 100);
+	uint32_t raw = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+	return raw;
 }
 /* USER CODE END 0 */
 
@@ -131,9 +145,11 @@ int main(void)
   MX_RTC_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+	HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-	TIM3->CCR1 = 65500;
-	
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+	TIM3->CCR1 = 65535;
+	//TIM3->CCR2 = 2000;
 	
 	pxs.setOrientation(LANDSCAPE);
 	pxs.enableAntialiasing(true);
@@ -142,12 +158,18 @@ int main(void)
 	pxs.setColor(MAIN_COLOR); 
 	pxs.clear();
 	pxs.displayOn();
-	pxs.fillRectangle(0, 0, 160, 128);
+	HAL_Delay(1000);
+	//pxs.fillRectangle(0, 0, 160, 128);
 	//pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
+	pxs.setFont(ElectroluxSansRegular14a);
+	pxs.print(20, 80, "Hello World");
+	HAL_Delay(500);
+	pxs.cleanText(20, 80, "Hello World");
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  //osKernelInitialize();
+  osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -167,14 +189,14 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
-  //osKernelStart();
+  osKernelStart();
  
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -395,9 +417,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 2;
+  htim3.Init.Prescaler = 1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 64000-1;
+  htim3.Init.Period = 16000-1;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
@@ -461,10 +483,10 @@ static void MX_GPIO_Init(void)
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 */
   /**/
-  GPIO_InitStruct.Pin = key1_Pin|key0_Pin|key2_Pin|key3_Pin 
-                          |key4_Pin|key5_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
-  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  //GPIO_InitStruct.Pin = key1_Pin|key0_Pin|key2_Pin|key3_Pin 
+  //                        |key4_Pin|key5_Pin;
+  //GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
+  //LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
@@ -498,19 +520,27 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-
-
-  for(;;)
-  {
-	  
-	  pxs.setColor(MAIN_COLOR);
-	  HAL_Delay(500);
-	  pxs.fillRectangle(0, 0, 161, 130);
-	  pxs.setColor(BG_COLOR);
-	  HAL_Delay(500);
-	  pxs.fillRectangle(0, 0, 161, 130);
-	  
-  }
+	char temperature[4] = {0};	
+	float temp_ntc = 0;
+	uint8_t onoff = 0;
+	temperature_sensor_ntc ntc_5K(5000, 33000, 3950, get_raw_adc_meas);
+	/* Infinite loop */
+	for (;;)
+	{
+		//temp_ntc = ntc_5K.get_sensor_temp();
+		//snprintf(temperature, sizeof(temperature), "%d.%d", (int)temp_ntc, ((int)(temp_ntc*100)%100));
+		//pxs.print(60, 40, temperature);
+		//osDelay(1000);
+		//pxs.cleanText(60, 40, temperature);
+		
+		if(power_key.button_pressed())
+		{
+			pxs.cleanText(60, 40, temperature);
+			snprintf(temperature, sizeof(temperature), "%d", ++onoff);
+			pxs.print(60, 40, temperature);
+		}
+		osDelay(10);
+	}
   /* USER CODE END 5 */ 
 }
 
@@ -522,6 +552,7 @@ void StartDefaultTask(void *argument)
   * @param  htim : TIM handle
   * @retval None
   */
+uint8_t button = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
@@ -529,6 +560,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
     HAL_IncTick();
+	  power_key.check_button_state();
   }
   /* USER CODE BEGIN Callback 1 */
 

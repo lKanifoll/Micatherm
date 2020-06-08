@@ -287,7 +287,15 @@ void PixelsBase::setCurrentPixel(int16_t color) {
 
 void PixelsBase::setCurrentPixel(RGB color) {
     int16_t c = color.convertTo565();
-    deviceWriteData(highByte(c), lowByte(c));
+	GPIOB->BSRR = GPIO_BSRR_BS7;
+	GPIOA->BSRR = (~highByte(c)) << 16 | highByte(c);
+	GPIOB->BSRR = GPIO_BSRR_BR8;
+	GPIOB->BSRR = GPIO_BSRR_BS8;
+	GPIOA->BSRR = (~lowByte(c)) << 16 | lowByte(c);
+	GPIOB->BSRR = GPIO_BSRR_BR8;
+	GPIOB->BSRR = GPIO_BSRR_BS8;
+	
+    //deviceWriteData(highByte(c), lowByte(c));
 }
 
 void PixelsBase::clear() {

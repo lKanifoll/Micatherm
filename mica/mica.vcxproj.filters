@@ -402,6 +402,9 @@
     <ClCompile Include="Src\Pixels.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\ntc_steinhart.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h">
@@ -432,6 +435,15 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="Inc\images.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\fonts.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="buttons.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\ntc_steinhart.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

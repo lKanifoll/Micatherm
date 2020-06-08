@@ -33,7 +33,48 @@
   <MCUMakFile>stm32.mak</MCUMakFile>
   <ReferencedFrameworks />
   <FrameworkProperties>
-    <Entries />
+    <Entries>
+      <KeyValue>
+        <Key>com.sysprogs.efp.semihosting.buffer_size</Key>
+        <Value>4096</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.semihosting.stdio</Key>
+        <Value>1</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.semihosting.blocking_mode</Key>
+        <Value>1</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.semihosting_driver</Key>
+        <Value>1</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.counter</Key>
+        <Value />
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.address_validators</Key>
+        <Value />
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.nosampling</Key>
+        <Value>0</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.debugger_check</Key>
+        <Value />
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.rtos</Key>
+        <Value>USE_FREERTOS_IF_FOUND</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.efp.profiling.hold_interrupts</Key>
+        <Value />
+      </KeyValue>
+    </Entries>
   </FrameworkProperties>
   <TestFrameworkProperties>
     <Entries />
@@ -44,7 +85,7 @@
     <AllDependencies>
       <ProjectDependency>
         <RelativePath>mica.gpdsc</RelativePath>
-        <Timestamp>132358190061569004</Timestamp>
+        <Timestamp>132360739281183742</Timestamp>
       </ProjectDependency>
     </AllDependencies>
     <RootDirectory>
@@ -400,13 +441,13 @@
       <ImportedConfiguration>
         <Settings>
           <IncludeDirectories>
-            <string>C:\Users\kochn\Desktop\mica\mica\Inc</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Drivers\CMSIS\Device\ST\STM32F1xx\Include</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Drivers\STM32F1xx_HAL_Driver\Inc</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Drivers\STM32F1xx_HAL_Driver\Src</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Middlewares\Third_Party\FreeRTOS\Source\include</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3</string>
-            <string>C:\Users\kochn\Desktop\mica\mica\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Inc</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Drivers\CMSIS\Device\ST\STM32F1xx\Include</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Inc</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Src</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Middlewares\Third_Party\FreeRTOS\Source\include</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3</string>
+            <string>C:\Users\kochn\Desktop\inprogress\CONVECTOR_FIRMWARES\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy</string>
           </IncludeDirectories>
           <PreprocessorMacros>
             <string>$$com.sysprogs.bspoptions.primary_memory$$_layout</string>

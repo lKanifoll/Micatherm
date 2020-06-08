@@ -44,7 +44,7 @@
       <CPPLanguageStandard>
       </CPPLanguageStandard>
       <AdditionalIncludeDirectories>Inc;Drivers\CMSIS\Device\ST\STM32F1xx\Include;Drivers\STM32F1xx_HAL_Driver\Inc;Drivers\STM32F1xx_HAL_Driver\Src;Middlewares\Third_Party\FreeRTOS\Source\include;Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3;Drivers\STM32F1xx_HAL_Driver\Inc\Legacy;Drivers/CMSIS/Core/Include;Drivers/CMSIS/RTOS2/Include;Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>flash_layout;STM32F103xB;USE_FREERTOS;DEBUG=1;USE_FULL_LL_DRIVER;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG=1;USE_FULL_LL_DRIVER;flash_layout;STM32F103xB;USE_FREERTOS;USE_NEWLIB_REENTRANT;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard />
     </ClCompile>
@@ -61,7 +61,7 @@
       <CPPLanguageStandard>
       </CPPLanguageStandard>
       <AdditionalIncludeDirectories>Inc;Drivers\CMSIS\Device\ST\STM32F1xx\Include;Drivers\STM32F1xx_HAL_Driver\Inc;Drivers\STM32F1xx_HAL_Driver\Src;Middlewares\Third_Party\FreeRTOS\Source\include;Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3;Drivers\STM32F1xx_HAL_Driver\Inc\Legacy;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>flash_layout;STM32F103xB;USE_FREERTOS;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;flash_layout;STM32F103xB;USE_FREERTOS;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard />
     </ClCompile>
@@ -83,6 +83,7 @@
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_gpio.c" />
     <ClCompile Include="Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
     <ClCompile Include="Src\freertos.c" />
+    <ClCompile Include="Src\ntc_steinhart.cpp" />
     <ClCompile Include="Src\Pixels.cpp" />
     <ClCompile Include="Src\stm32f1xx_it.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />
@@ -118,10 +119,13 @@
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim_ex.c" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c" />
+    <ClInclude Include="buttons.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h" />
+    <ClInclude Include="Inc\fonts.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
     <ClInclude Include="Inc\images.h" />
+    <ClInclude Include="Inc\ntc_steinhart.h" />
     <ClInclude Include="Inc\Pixels.h" />
     <ClInclude Include="Inc\Pixels_Antialiasing.h" />
     <ClInclude Include="Inc\Pixels_PPI8.h" />
