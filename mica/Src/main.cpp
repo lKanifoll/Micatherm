@@ -31,11 +31,16 @@
 #include "fonts.h"
 #include "ntc_steinhart.h"
 #include "buttons.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+osTimerId_t myTimer01Handle;
+const osTimerAttr_t myTimer01_attributes = {
+	.name = "myTimer01"
+};
+void Callback01(void *argument);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -165,7 +170,9 @@ int main(void)
 	pxs.print(20, 80, "Hello World");
 	HAL_Delay(500);
 	pxs.cleanText(20, 80, "Hello World");
-
+	
+	
+	
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -180,6 +187,8 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
+	myTimer01Handle = osTimerNew(Callback01, osTimerPeriodic, NULL, &myTimer01_attributes);
+	osTimerStart(myTimer01Handle, 1);
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
@@ -492,7 +501,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
                           |LCD_WR_Pin|LCD_RD_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -506,6 +515,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Callback01(void *argument)
+{
+	power_key.check_button_state();
+}
 
 /* USER CODE END 4 */
 
@@ -560,7 +573,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
     HAL_IncTick();
-	  power_key.check_button_state();
+	  
   }
   /* USER CODE BEGIN Callback 1 */
 
