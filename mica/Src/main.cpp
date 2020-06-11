@@ -36,11 +36,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-osTimerId_t myTimer01Handle;
-const osTimerAttr_t myTimer01_attributes = {
-	.name = "myTimer01"
+osTimerId_t button_timer;
+const osTimerAttr_t button_timer_attributes = {
+	.name = "button_timer"
 };
-void Callback01(void *argument);
+void button_timer_callback(void *argument);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -187,8 +187,8 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-	myTimer01Handle = osTimerNew(Callback01, osTimerPeriodic, NULL, &myTimer01_attributes);
-	osTimerStart(myTimer01Handle, 1);
+	button_timer = osTimerNew(button_timer_callback, osTimerPeriodic, NULL, &button_timer_attributes);
+	osTimerStart(button_timer, 1);
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
@@ -515,7 +515,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void Callback01(void *argument)
+void button_timer_callback(void *argument)
 {
 	power_key.check_button_state();
 }
@@ -546,7 +546,7 @@ void StartDefaultTask(void *argument)
 		//osDelay(1000);
 		//pxs.cleanText(60, 40, temperature);
 		
-		if(power_key.button_pressed())
+		if(power_key.button_short_is_pressed())
 		{
 			pxs.cleanText(60, 40, temperature);
 			snprintf(temperature, sizeof(temperature), "%d", ++onoff);
