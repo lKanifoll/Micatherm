@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -149,28 +149,28 @@ int main(void)
   //MX_IWDG_Init();
   MX_RTC_Init();
   MX_TIM3_Init();
-  /* USER CODE BEGIN 2 */
-	HAL_ADCEx_Calibration_Start(&hadc1);
+    /* USER CODE BEGIN 2 */
+  HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-	TIM3->CCR1 = 65535;
-	//TIM3->CCR2 = 2000;
+  TIM3->CCR1 = 65535;
+    //TIM3->CCR2 = 2000;
 	
-	pxs.setOrientation(LANDSCAPE);
-	pxs.enableAntialiasing(true);
-	pxs.init();
-	pxs.setBackground(BG_COLOR);
-	pxs.setColor(MAIN_COLOR); 
-	pxs.clear();
-	pxs.displayOn();
-	HAL_Delay(1000);
-	//pxs.fillRectangle(0, 0, 160, 128);
-	//pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
-	pxs.setFont(ElectroluxSansRegular14a);
-	pxs.print(20, 80, "Hello World");
-	HAL_Delay(500);
-	pxs.cleanText(20, 80, "Hello World");
-	
+  pxs.setOrientation(LANDSCAPE);
+  pxs.enableAntialiasing(true);
+  pxs.init();
+  pxs.setBackground(BG_COLOR);
+  pxs.setColor(MAIN_COLOR); 
+  pxs.clear();
+  pxs.displayOn();
+  HAL_Delay(1000);
+  //pxs.fillRectangle(0, 0, 160, 128);
+  //pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
+  pxs.setFont(ElectroluxSansRegular14a);
+  pxs.print(20, 80, "Hello World");
+  HAL_Delay(500);
+  pxs.cleanText(20, 80, "Hello World");
+
 	
 	
   /* USER CODE END 2 */
@@ -517,7 +517,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void button_timer_callback(void *argument)
 {
-	power_key.check_button_state();
+	power_key.check_button_state();	
 }
 
 /* USER CODE END 4 */
@@ -546,7 +546,7 @@ void StartDefaultTask(void *argument)
 		//osDelay(1000);
 		//pxs.cleanText(60, 40, temperature);
 		
-		if(power_key.button_short_is_pressed())
+		if(/*power_key.button_long_is_pressed()*/power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
 		{
 			pxs.cleanText(60, 40, temperature);
 			snprintf(temperature, sizeof(temperature), "%d", ++onoff);

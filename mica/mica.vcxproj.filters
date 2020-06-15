@@ -405,6 +405,9 @@
     <ClCompile Include="Src\ntc_steinhart.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="buttons.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h">
