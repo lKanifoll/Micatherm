@@ -408,6 +408,9 @@
     <ClCompile Include="buttons.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="maintence.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h">
@@ -447,6 +450,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="Inc\ntc_steinhart.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="maintence.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

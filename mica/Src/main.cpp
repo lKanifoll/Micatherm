@@ -24,14 +24,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "Pixels.h"
-#include <Pixels_PPI8.h> 
-#include <Pixels_ST7735.h>
-#include "images.h"
-#include "fonts.h"
-#include "ntc_steinhart.h"
-#include "buttons.h"
 
+#include "maintence.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,14 +39,14 @@ void button_timer_callback(void *argument);
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define BG_COLOR	RGB(0x0, 0x0, 0x0)
-#define MAIN_COLOR	RGB(0x00, 0xFF, 0xFF)
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-Pixels pxs(161, 130);
-button power_key(key1_GPIO_Port, key1_Pin);
+
+void buttons_task(void *argument);
+//button power_key(key1_GPIO_Port, key1_Pin);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,9 +59,9 @@ RTC_HandleTypeDef hrtc;
 TIM_HandleTypeDef htim3;
 
 /* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+osThreadId_t buttons_task_handle;
+const osThreadAttr_t buttons_attributes = {
+    .name = "buttons_task",
   .stack_size = 128*4,
   .priority = (osPriority_t) osPriorityNormal
 };
@@ -85,36 +79,10 @@ static void MX_TIM3_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
-void screen_smooth_transition();
-uint32_t get_raw_adc_meas();
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void screen_smooth_transition()
-{
-	while (TIM3->CCR1 > 1000)
-	{
-		TIM3->CCR1 -= 1000;
-		HAL_Delay(1);
-	}
-	HAL_Delay(100);
-	while (TIM3->CCR1 < 65000)
-	{
-		TIM3->CCR1 += 500;
-		HAL_Delay(2);
-	}
-}
-
-uint32_t get_raw_adc_meas()
-{
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, 100);
-	uint32_t raw = HAL_ADC_GetValue(&hadc1);
-	HAL_ADC_Stop(&hadc1);
-	return raw;
-}
 /* USER CODE END 0 */
 
 /**
@@ -156,21 +124,22 @@ int main(void)
   TIM3->CCR1 = 65535;
     //TIM3->CCR2 = 2000;
 	
-  pxs.setOrientation(LANDSCAPE);
-  pxs.enableAntialiasing(true);
-  pxs.init();
-  pxs.setBackground(BG_COLOR);
-  pxs.setColor(MAIN_COLOR); 
-  pxs.clear();
-  pxs.displayOn();
-  HAL_Delay(1000);
-  //pxs.fillRectangle(0, 0, 160, 128);
-  //pxs.drawCompressedBitmap(0, 0, img_menu_heatmode_icon_png_comp);
-  pxs.setFont(ElectroluxSansRegular14a);
-  pxs.print(20, 80, "Hello World");
-  HAL_Delay(500);
-  pxs.cleanText(20, 80, "Hello World");
-
+  //pxs.setOrientation(PORTRAIT);
+  //pxs.enableAntialiasing(true);
+  //pxs.init();
+  //pxs.setBackground(BG_COLOR);
+  //pxs.setColor(MAIN_COLOR); 
+  //pxs.clear();
+  //pxs.displayOn();
+  //HAL_Delay(1000);
+	//pxs.fillRectangle(0,0,5,5);
+	//pxs.drawCompressedBitmap(0, 0, img_test3_png_comp);
+  //pxs.setFont(ElectroluxSansRegular14a);
+  //pxs.print(20, 80, "Hello World");
+  //HAL_Delay(5000);
+  //pxs.cleanText(20, 80, "Hello World");
+ // pxs.clear();
+  //pxs.drawCompressedBitmap(0, 0, img_test2_png_comp);
 	
 	
   /* USER CODE END 2 */
@@ -198,7 +167,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+	buttons_task_handle = osThreadNew(buttons_task, NULL, &buttons_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -483,21 +452,6 @@ static void MX_GPIO_Init(void)
   LL_GPIO_ResetOutputPin(GPIOB, Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
                           |LCD_WR_Pin|LCD_RD_Pin);
 
-  /*
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3 
-                          |LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-*/
-  /**/
-  //GPIO_InitStruct.Pin = key1_Pin|key0_Pin|key2_Pin|key3_Pin 
-  //                        |key4_Pin|key5_Pin;
-  //GPIO_InitStruct.Mode = LL_GPIO_MODE_FLOATING;
-  //LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /**/
   GPIO_InitStruct.Pin = Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
                           |LCD_WR_Pin|LCD_RD_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
@@ -505,20 +459,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*
-  GPIO_InitStruct.Pin = LCD_BL_Pin;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  LL_GPIO_Init(LCD_BL_GPIO_Port, &GPIO_InitStruct);
-*/
 }
 
 /* USER CODE BEGIN 4 */
-void button_timer_callback(void *argument)
-{
-	power_key.check_button_state();	
-}
+
 
 /* USER CODE END 4 */
 
@@ -529,33 +473,7 @@ void button_timer_callback(void *argument)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-	char temperature[4] = {0};	
-	float temp_ntc = 0;
-	uint8_t onoff = 0;
-	temperature_sensor_ntc ntc_5K(5000, 33000, 3950, get_raw_adc_meas);
-	/* Infinite loop */
-	for (;;)
-	{
-		//temp_ntc = ntc_5K.get_sensor_temp();
-		//snprintf(temperature, sizeof(temperature), "%d.%d", (int)temp_ntc, ((int)(temp_ntc*100)%100));
-		//pxs.print(60, 40, temperature);
-		//osDelay(1000);
-		//pxs.cleanText(60, 40, temperature);
-		
-		if(/*power_key.button_long_is_pressed()*/power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
-		{
-			pxs.cleanText(60, 40, temperature);
-			snprintf(temperature, sizeof(temperature), "%d", ++onoff);
-			pxs.print(60, 40, temperature);
-		}
-		osDelay(10);
-	}
-  /* USER CODE END 5 */ 
-}
+
 
  /**
   * @brief  Period elapsed callback in non blocking mode
@@ -565,15 +483,14 @@ void StartDefaultTask(void *argument)
   * @param  htim : TIM handle
   * @retval None
   */
-uint8_t button = 0;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
-    HAL_IncTick();
-	  
+	  HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
 

@@ -179,7 +179,8 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                 if ( orientation == PORTRAIT ) {
 	                GPIOB->BSRR = GPIO_BSRR_BS7;
                     setCurrentPixel(px);
-                } else {
+                } else 
+                {
                     raster[rasterPtr++] = px;
                     if ( rasterPtr == width ) {
                         setRegion(x, rasterLine, x + width - 1, rasterLine);
@@ -234,7 +235,8 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                     if ( orientation == PORTRAIT ) {
 	                    GPIOB->BSRR = GPIO_BSRR_BS7;
                         setCurrentPixel(px);
-                    } else {
+                    } else 
+                    {
                         raster[rasterPtr++] = px;
                         if ( rasterPtr == width ) {
                             setRegion(x, rasterLine, x + width - 1, rasterLine);

@@ -1,6 +1,10 @@
 #include "main.h"
 #include "buttons.h"
 
+
+
+
+
 button ::button(GPIO_TypeDef *_button_port, uint32_t _button_pin, uint16_t _long_press_time)
 {
 	button_port = _button_port;
@@ -57,3 +61,5 @@ bool button::button_long_is_pressed()
 	}
 	return false;		
 }	
+
+
