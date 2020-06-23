@@ -8,6 +8,13 @@
 #include "ntc_steinhart.h"
 #include "buttons.h"
 
+typedef struct menu_item
+{
+	uint8_t ID;
+	prog_uchar *icon;
+	char text[20];
+
+} menu_item_t;
 
 extern ADC_HandleTypeDef hadc1;
 extern IWDG_HandleTypeDef hiwdg;
@@ -21,6 +28,16 @@ Pixels pxs(130, 161);
 
 
 button power_key(key1_GPIO_Port, key1_Pin);
+
+
+
+static menu_item_t main_menu[] = { 
+	{1, img_ok_png_comp, "OK"},
+	{2, img_menu_setting_sound_on_png_comp, "Sound On"},
+	{3, img_menu_setting_sound_off_png_comp, "Sound Off"}
+	};
+
+
 
 void button_timer_callback(void *argument)
 {
@@ -42,18 +59,25 @@ void buttons_task(void *argument)
 	
 	
 	uint8_t onoff = 0;
-	char temperature[3];	
+	char disp_out[3];	
 	for (;;)
 	{
 		if (power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
 		{
-			pxs.cleanText(60, 40, temperature);
-			snprintf(temperature, sizeof(temperature), "%d", ++onoff);
-			pxs.print(60, 40, temperature);
+			pxs.clear();
+			pxs.drawCompressedBitmap(20, 20, main_menu[onoff].icon);
+			onoff++;
+			if (onoff == 3) onoff = 0;
+			/*
+			pxs.cleanText(60, 40, disp_out);
+			snprintf(disp_out, sizeof(disp_out), "%d", main_menu[onoff].ID);
+			pxs.print(60, 40, disp_out);
+			onoff++;
+			if (onoff == 3) onoff = 0;
+			*/
 		}
 		osDelay(10);	
 	}
-
 }
 
 
