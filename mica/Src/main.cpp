@@ -62,7 +62,7 @@ TIM_HandleTypeDef htim3;
 osThreadId_t buttons_task_handle;
 const osThreadAttr_t buttons_attributes = {
     .name = "buttons_task",
-  .stack_size = 128*4,
+  .stack_size = 512*4,
   .priority = (osPriority_t) osPriorityNormal
 };
 /* USER CODE BEGIN PV */

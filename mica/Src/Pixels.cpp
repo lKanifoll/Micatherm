@@ -271,7 +271,7 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
     chipDeselect();
 
 		delete [] window;
-		delete [] raster;
+	    if (orientation != PORTRAIT) delete[] raster;
     return 0;
 }
 

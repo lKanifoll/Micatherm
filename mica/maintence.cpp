@@ -32,8 +32,8 @@ button power_key(key1_GPIO_Port, key1_Pin);
 
 
 static menu_item_t main_menu[] = { 
-	{1, img_ok_png_comp, "OK"},
-	{2, img_menu_setting_sound_on_png_comp, "Sound On"},
+	{1, img_menu_setting_sound_on_png_comp, "OK"},
+	{2, img_ok_png_comp, "Sound On"},
 	{3, img_menu_setting_sound_off_png_comp, "Sound Off"}
 	};
 
@@ -46,7 +46,7 @@ void button_timer_callback(void *argument)
 
 void buttons_task(void *argument)
 {
-	pxs.setOrientation(LANDSCAPE);
+	pxs.setOrientation(PORTRAIT);
 	pxs.enableAntialiasing(true);
 	pxs.init();
 	pxs.setBackground(BG_COLOR);
@@ -58,20 +58,20 @@ void buttons_task(void *argument)
 	
 	
 	
-	uint8_t onoff = 128;
+	uint8_t onoff = 0;
 	char disp_out[3];	
 	for (;;)
 	{
 		if (power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
 		{
-			pxs.clear();
-			pxs.setColor(pxs.computeColor(MAIN_COLOR, onoff));
-			pxs.fillRectangle(0,0,160,128);
-			
 			//pxs.clear();
-			//pxs.drawCompressedBitmap(20, 20, main_menu[onoff].icon);
-			//onoff++;
-			//if (onoff == 3) onoff = 0;
+			//pxs.setColor(pxs.computeColor(MAIN_COLOR, onoff));
+			//pxs.fillRectangle(0,0,130,161);
+			
+			pxs.clear();
+			pxs.drawCompressedBitmap(0, 0, main_menu[onoff].icon);
+			onoff++;
+			if (onoff == 3) onoff = 0;
 			/*
 			pxs.cleanText(60, 40, disp_out);
 			snprintf(disp_out, sizeof(disp_out), "%d", main_menu[onoff].ID);

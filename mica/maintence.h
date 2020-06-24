@@ -1,9 +1,8 @@
 #pragma once
 
 
-
-
-
+#define DISPLAY_HEIGHT 161
+#define DISPLAY_WIDTH  130
 
 
 
