@@ -65,7 +65,7 @@ protected:
 			GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7;
 			GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
 			GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-			//GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+			//GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 			
 			LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
@@ -73,11 +73,11 @@ protected:
 			uint8_t result = LL_GPIO_ReadInputPort(GPIOA) & 0xFF;
 			LL_GPIO_SetOutputPin(LCD_RD_GPIO_Port, LCD_RD_Pin);
 
-			GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7;
+			GPIO_InitStruct.Pin = LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7 | LCD_BL_Pin;
 			GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 			GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
 			GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-			//GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 			
 			return result;

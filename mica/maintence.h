@@ -3,7 +3,8 @@
 
 #define DISPLAY_HEIGHT 161
 #define DISPLAY_WIDTH  130
-
+#define DX0 2
+#define DY0 1
 
 
 

@@ -62,7 +62,7 @@ TIM_HandleTypeDef htim3;
 osThreadId_t buttons_task_handle;
 const osThreadAttr_t buttons_attributes = {
     .name = "buttons_task",
-  .stack_size = 512*4,
+  .stack_size = 128*4,
   .priority = (osPriority_t) osPriorityNormal
 };
 /* USER CODE BEGIN PV */
@@ -110,18 +110,20 @@ int main(void)
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
+	
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
   //MX_IWDG_Init();
   MX_RTC_Init();
-  MX_TIM3_Init();
+	MX_TIM3_Init();
+	TIM3->CCR1 = 0;
     /* USER CODE BEGIN 2 */
   HAL_ADCEx_Calibration_Start(&hadc1);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-  TIM3->CCR1 = 65535;
+  
     //TIM3->CCR2 = 2000;
 	
   //pxs.setOrientation(PORTRAIT);
@@ -404,12 +406,14 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
+	
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
+	
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 32768;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;

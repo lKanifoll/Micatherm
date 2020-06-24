@@ -49,9 +49,9 @@ PixelsBase::PixelsBase(uint16_t width, uint16_t height) {
     this->height = height;
     orientation = width > height ? LANDSCAPE : PORTRAIT;
 
-    relativeOrigin = false;
+    relativeOrigin = true;
 
-    currentScroll = 1;
+    currentScroll = 0;
     scrollSupported = true;
     scrollEnabled = true;
 

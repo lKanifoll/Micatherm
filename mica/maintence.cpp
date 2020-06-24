@@ -24,7 +24,7 @@ extern TIM_HandleTypeDef htim3;
 #define BG_COLOR	RGB(0x0, 0x0, 0x0)
 #define MAIN_COLOR	RGB(0xFF, 0xFF, 0xFF)
 
-Pixels pxs(130, 161);
+Pixels pxs(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
 
 button power_key(key1_GPIO_Port, key1_Pin);
@@ -32,8 +32,8 @@ button power_key(key1_GPIO_Port, key1_Pin);
 
 
 static menu_item_t main_menu[] = { 
-	{1, img_menu_setting_sound_on_png_comp, "OK"},
-	{2, img_ok_png_comp, "Sound On"},
+	{1, img_ok_png_comp, "OK"},
+	{2, img_menu_setting_sound_on_png_comp, "Sound On"},
 	{3, img_menu_setting_sound_off_png_comp, "Sound Off"}
 	};
 
@@ -54,10 +54,11 @@ void buttons_task(void *argument)
 	pxs.clear();
 	pxs.displayOn();
 	pxs.setFont(ElectroluxSansRegular14a);
-
+	TIM3->CCR1 = 65535;
 	
 	
-	
+	int16_t pic_width = 0;
+	int16_t pic_height = 0;
 	uint8_t onoff = 0;
 	char disp_out[3];	
 	for (;;)
@@ -65,11 +66,15 @@ void buttons_task(void *argument)
 		if (power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
 		{
 			//pxs.clear();
-			//pxs.setColor(pxs.computeColor(MAIN_COLOR, onoff));
-			//pxs.fillRectangle(0,0,130,161);
+			pxs.setColor(BG_COLOR);
+			pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2), pic_width, pic_height);
 			
-			pxs.clear();
-			pxs.drawCompressedBitmap(0, 0, main_menu[onoff].icon);
+			//pxs.clear();
+			pxs.sizeCompressedBitmap(pic_width, pic_height, main_menu[onoff].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height/2), main_menu[onoff].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(main_menu[onoff ? (onoff - 1) : 2].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, main_menu[onoff ? (onoff - 1) : 2].text);
+			pxs.setColor(MAIN_COLOR);
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(main_menu[onoff].text)/2), DY0 + DISPLAY_HEIGHT / 2 + 30, main_menu[onoff].text);
 			onoff++;
 			if (onoff == 3) onoff = 0;
 			/*
