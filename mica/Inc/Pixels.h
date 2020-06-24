@@ -136,8 +136,7 @@ protected:
     void fill(int b, int16_t x1, int16_t y1, int16_t x2, int16_t y2);
     virtual void quickFill(int b, int16_t x1, int16_t y1, int16_t x2, int16_t y2) {};
     void putColor(int16_t x, int16_t y, bool steep, double weight);
-    RGB computeColor(RGB, double weight);
-    RGB computeColor(RGB fg, uint8_t opacity);
+
 
     void resetRegion();
 
@@ -162,7 +161,8 @@ public:
      * @param height target device height (in pixels)
      */
     PixelsBase(uint16_t width, uint16_t height);
-
+	RGB computeColor(RGB, double weight);
+	RGB computeColor(RGB fg, uint8_t opacity);
 	
 		/**
      * Initializes hardware with defaults.

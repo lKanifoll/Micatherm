@@ -22,7 +22,7 @@ extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim3;
 
 #define BG_COLOR	RGB(0x0, 0x0, 0x0)
-#define MAIN_COLOR	RGB(0x00, 0xFF, 0xFF)
+#define MAIN_COLOR	RGB(0xFF, 0xFF, 0xFF)
 
 Pixels pxs(130, 161);
 
@@ -58,16 +58,20 @@ void buttons_task(void *argument)
 	
 	
 	
-	uint8_t onoff = 0;
+	uint8_t onoff = 128;
 	char disp_out[3];	
 	for (;;)
 	{
 		if (power_key.button_short_is_pressed() || power_key.button_continious_is_pressed())
 		{
 			pxs.clear();
-			pxs.drawCompressedBitmap(20, 20, main_menu[onoff].icon);
-			onoff++;
-			if (onoff == 3) onoff = 0;
+			pxs.setColor(pxs.computeColor(MAIN_COLOR, onoff));
+			pxs.fillRectangle(0,0,160,128);
+			
+			//pxs.clear();
+			//pxs.drawCompressedBitmap(20, 20, main_menu[onoff].icon);
+			//onoff++;
+			//if (onoff == 3) onoff = 0;
 			/*
 			pxs.cleanText(60, 40, disp_out);
 			snprintf(disp_out, sizeof(disp_out), "%d", main_menu[onoff].ID);
