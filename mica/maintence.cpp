@@ -16,6 +16,7 @@ typedef struct menu_item
 	char text[20];
 	menu_item *next_menu;
 	menu_item *prev_menu;
+	uint8_t selected_menu;
 
 } menu_item_t;
 
@@ -46,19 +47,44 @@ static menu_item_t timer_menu[] = {
 
 };
 
+static menu_item_t service_menu[] = {
+	{ 0, 0, img_menu_setting_reset_png_comp, "Reset" },
+	{ 1, 0, img_menu_setting_info_png_comp, "Info" }	
+};
+
+static menu_item_t settings_menu[] = {
+	{ 0, 2, img_menu_setting_datetime_png_comp, "Date & time" },
+	{ 1, 2, img_menu_display_png_comp, "Display" },
+	{ 2, 0, img_menu_setting_sound_on_png_comp, "Sound" },
+	{ 3, 2, img_menu_setting_service_png_comp, "Service", service_menu, NULL }
+};
+
+static menu_item_t programme_menu[] = {
+	
+	{ 0, 0, img_menu_program_setup_icon_png_comp, "Setup" },
+	{ 1, 0, img_program_cal_on_icon_png_comp, "On" },
+	{ 2, 0, img_menu_program_custom_png_comp, "Custom" },
+};
+
 static menu_item_t main_menu[] = { 
 	{0, 3, img_menu_heatmode_icon_png_comp, "Heat mode", heatmode_menu, NULL},
 	{1, 1, img_menu_timer_icon_png_comp, "Timer", timer_menu, NULL},
-	{2, 4, img_menu_setting_icon_png_comp, "Settings", NULL},
-	{3, 3, img_menu_program_icon_png_comp, "Programme", NULL}
+	{2, 4, img_menu_setting_icon_png_comp, "Settings", settings_menu, NULL},
+	{3, 3, img_menu_program_icon_png_comp, "Programme", programme_menu, NULL}
 	};
 
 static menu_item_t menu[] = { 
 	{ 0, 4, NULL, "", main_menu, NULL }
 };
+
+
+
 menu_item_t *current_menu = NULL;
 menu_item_t *tmp_current_menu = NULL;
 uint8_t prev_current_pos = 0;
+
+
+
 void button_timer_callback(void *argument)
 {
 	enter_key.check_button_state();	
@@ -79,41 +105,36 @@ void buttons_task(void *argument)
 	pxs.displayOn();
 	pxs.setFont(ElectroluxSansRegular10a);
 	TIM3->CCR1 = 65535;
-	
-	
+		
 	int16_t pic_width = 0;
 	int16_t pic_height = 0;
-	uint8_t menu_item = 0;
-	char disp_out[3];	
-	uint8_t menu_size = 0;
 
 	for (;;)
 	{
 		
 		if (enter_key.button_short_is_pressed())
 		{
-			//menu_item = 0;
+
 			pxs.clear();
 			if(current_menu == NULL) 
 			{
-				
-				current_menu = main_menu;
-				current_menu->prev_menu = menu;
+				current_menu = menu;
 			}
 			else
 			{
 				tmp_current_menu = current_menu;
-				current_menu = current_menu[menu_item].next_menu;
+				current_menu = &current_menu->next_menu[current_menu->selected_menu];
 				current_menu->prev_menu = tmp_current_menu;
-				prev_current_pos = menu_item;
 			}
-			menu_item = 0;
-			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu[0].icon);
-			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu[0].icon);
-			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[0].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[0].text);
+			
+			current_menu->selected_menu = 0;
+			
+			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);
 			pxs.setColor(MAIN_COLOR);
-			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[0].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[0].text);	
-
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
+			
 		}		
 		
 		if (back_key.button_short_is_pressed())
@@ -127,50 +148,47 @@ void buttons_task(void *argument)
 			{
 				tmp_current_menu = current_menu;
 				current_menu = tmp_current_menu->prev_menu;
-				//current_menu->prev_menu = ;
 			}			
-			menu_item = prev_current_pos;
+			
 			pxs.clear();
-			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu[menu_item].icon);
-			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu[menu_item].icon);
-			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item ? (menu_item - 1) : 3].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item ? (menu_item - 1) : 3].text);
+			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text);
 			pxs.setColor(MAIN_COLOR);
-			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item].text);	
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
 
 			
 		}
 		
 		if (up_key.button_short_is_pressed() || up_key.button_continious_is_pressed())
 		{
-			menu_item++;
-			if (menu_item >= current_menu->prev_menu->item_count) menu_item = 0;
-			//pxs.clear();
+			current_menu->selected_menu++;
+			if (current_menu->selected_menu >= current_menu->item_count) current_menu->selected_menu = 0;
+
 			pxs.setColor(BG_COLOR);
 			pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
-			
-			//pxs.clear();
-			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu[menu_item].icon);
-			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu[menu_item].icon);
-			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item ? (menu_item - 1) : current_menu->prev_menu->item_count - 1].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item ? (menu_item - 1) : current_menu->prev_menu->item_count - 1].text);
+
+			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : current_menu->item_count - 1].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : current_menu->item_count - 1].text);
 			pxs.setColor(MAIN_COLOR);
-			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item].text);	
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
 
 		}
 		
 		if (down_key.button_short_is_pressed() || down_key.button_continious_is_pressed())
 		{
-			menu_item--;
-			if (menu_item == 255) menu_item = current_menu->prev_menu->item_count - 1;
-			//pxs.clear();
+			current_menu->selected_menu--;
+			if (current_menu->selected_menu == 255) current_menu->selected_menu = current_menu->item_count - 1;
+
 			pxs.setColor(BG_COLOR);
 			pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
-			
-			//pxs.clear();
-			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu[menu_item].icon);
-			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu[menu_item].icon);
-			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item == (current_menu->prev_menu->item_count - 1) ? 0 : (menu_item + 1)].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item == (current_menu->prev_menu->item_count - 1) ? 0 : (menu_item + 1)].text);
+
+			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu == (current_menu->item_count - 1) ? 0 : (current_menu->selected_menu + 1)].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu == (current_menu->item_count - 1) ? 0 : (current_menu->selected_menu + 1)].text);
 			pxs.setColor(MAIN_COLOR);
-			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu[menu_item].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu[menu_item].text);
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);
 
 		}		
 		osDelay(10);	
