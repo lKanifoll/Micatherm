@@ -43,7 +43,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "cmsis_os.h"
-
+	extern SPI_HandleTypeDef hspi1;
 	
 	
 /* USER CODE END Includes */
@@ -73,38 +73,38 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define NTC_Pin LL_GPIO_PIN_0
-#define NTC_GPIO_Port GPIOB
-#define key1_Pin LL_GPIO_PIN_1
-#define key1_GPIO_Port GPIOB
-#define key0_Pin LL_GPIO_PIN_2
-#define key0_GPIO_Port GPIOB
-#define key2_Pin LL_GPIO_PIN_10
-#define key2_GPIO_Port GPIOB
-#define key3_Pin LL_GPIO_PIN_11
-#define key3_GPIO_Port GPIOB
-#define key4_Pin LL_GPIO_PIN_12
-#define key4_GPIO_Port GPIOB
-#define key5_Pin LL_GPIO_PIN_13
-#define key5_GPIO_Port GPIOB
-#define Relay_Pin LL_GPIO_PIN_15
-#define Relay_GPIO_Port GPIOB
-#define LCD_BL_Pin LL_GPIO_PIN_12
-#define LCD_BL_GPIO_Port GPIOA
-#define LCD_CS_Pin LL_GPIO_PIN_3
+///#define NTC_Pin LL_GPIO_PIN_4
+//#define NTC_GPIO_Port GPIOA
+#define key1_Pin LL_GPIO_PIN_6
+#define key1_GPIO_Port GPIOC
+#define key0_Pin LL_GPIO_PIN_7
+#define key0_GPIO_Port GPIOC
+#define key2_Pin LL_GPIO_PIN_9
+#define key2_GPIO_Port GPIOC
+#define key3_Pin LL_GPIO_PIN_8
+#define key3_GPIO_Port GPIOC
+#define key4_Pin LL_GPIO_PIN_10
+#define key4_GPIO_Port GPIOA
+#define key5_Pin LL_GPIO_PIN_9
+#define key5_GPIO_Port GPIOA
+//#define Relay_Pin LL_GPIO_PIN_15
+//#define Relay_GPIO_Port GPIOB
+#define LCD_BL_Pin LL_GPIO_PIN_0
+#define LCD_BL_GPIO_Port GPIOC
+#define LCD_CS_Pin LL_GPIO_PIN_4
 #define LCD_CS_GPIO_Port GPIOB
-#define backlight_Pin LL_GPIO_PIN_4
-#define backlight_GPIO_Port GPIOB
-#define beeper_Pin LL_GPIO_PIN_5
-#define beeper_GPIO_Port GPIOB
-#define LCD_RST_Pin LL_GPIO_PIN_6
+//#define backlight_Pin LL_GPIO_PIN_4
+//#define backlight_GPIO_Port GPIOB
+//#define beeper_Pin LL_GPIO_PIN_5
+//#define beeper_GPIO_Port GPIOB
+#define LCD_RST_Pin LL_GPIO_PIN_7
 #define LCD_RST_GPIO_Port GPIOB
-#define LCD_RS_Pin LL_GPIO_PIN_7
-#define LCD_RS_GPIO_Port GPIOB
-#define LCD_WR_Pin LL_GPIO_PIN_8
-#define LCD_WR_GPIO_Port GPIOB
-#define LCD_RD_Pin LL_GPIO_PIN_9
-#define LCD_RD_GPIO_Port GPIOB
+#define LCD_A0_Pin LL_GPIO_PIN_6
+#define LCD_A0_GPIO_Port GPIOB
+//#define LCD_WR_Pin LL_GPIO_PIN_8
+//#define LCD_WR_GPIO_Port GPIOB
+//#define LCD_RD_Pin LL_GPIO_PIN_9
+//#define LCD_RD_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

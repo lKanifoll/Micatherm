@@ -57,7 +57,8 @@ IWDG_HandleTypeDef hiwdg;
 RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim3;
-
+SPI_HandleTypeDef hspi1;
+DMA_HandleTypeDef hdma_spi1_tx;
 /* Definitions for defaultTask */
 osThreadId_t buttons_task_handle;
 const osThreadAttr_t buttons_attributes = {
@@ -76,6 +77,8 @@ static void MX_ADC1_Init(void);
 static void MX_IWDG_Init(void);
 static void MX_RTC_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_DMA_Init(void);
+static void MX_SPI1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -114,14 +117,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC1_Init();
+  //MX_ADC1_Init();
+  MX_DMA_Init();
+  MX_SPI1_Init();
   //MX_IWDG_Init();
-  MX_RTC_Init();
-	MX_TIM3_Init();
-	TIM3->CCR1 = 0;
+  //MX_RTC_Init();
+  //MX_TIM3_Init();
+  //TIM3->CCR1 = 0;
     /* USER CODE BEGIN 2 */
-  HAL_ADCEx_Calibration_Start(&hadc1);
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+
+	
+	
+  //HAL_ADCEx_Calibration_Start(&hadc1);
+  //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   //HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   
     //TIM3->CCR2 = 2000;
@@ -447,17 +455,18 @@ static void MX_GPIO_Init(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
-  /**/
+  /*
   LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_0|LL_GPIO_PIN_1|LL_GPIO_PIN_2|LL_GPIO_PIN_3 
-                          |LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7 
-                          |LCD_BL_Pin);
+                               |LL_GPIO_PIN_4|LL_GPIO_PIN_5|LL_GPIO_PIN_6|LL_GPIO_PIN_7 
+                               |LCD_BL_Pin);
+  */
 
   /**/
-  LL_GPIO_ResetOutputPin(GPIOB, Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
-                          |LCD_WR_Pin|LCD_RD_Pin);
+  //LL_GPIO_ResetOutputPin(GPIOB, Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
+  //                                       |LCD_WR_Pin|LCD_RD_Pin);
+	LL_GPIO_ResetOutputPin(GPIOB, LCD_CS_Pin | LCD_RST_Pin | LCD_A0_Pin);
 
-  GPIO_InitStruct.Pin = Relay_Pin|LCD_CS_Pin|LCD_RST_Pin|LCD_RS_Pin 
-                          |LCD_WR_Pin|LCD_RD_Pin;
+	GPIO_InitStruct.Pin = LCD_CS_Pin | LCD_RST_Pin | LCD_A0_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
 	GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -466,7 +475,54 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void MX_SPI1_Init(void)
+{
 
+	/* USER CODE BEGIN SPI1_Init 0 */
+
+	/* USER CODE END SPI1_Init 0 */
+
+	/* USER CODE BEGIN SPI1_Init 1 */
+
+	/* USER CODE END SPI1_Init 1 */
+	/* SPI1 parameter configuration*/
+	hspi1.Instance = SPI1;
+	hspi1.Init.Mode = SPI_MODE_MASTER;
+	hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+	hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+	hspi1.Init.NSS = SPI_NSS_SOFT;
+	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+	hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+	hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	hspi1.Init.CRCPolynomial = 10;
+	if (HAL_SPI_Init(&hspi1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN SPI1_Init 2 */
+
+	/* USER CODE END SPI1_Init 2 */
+
+}
+
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+
+	/* DMA controller clock enable */
+	__HAL_RCC_DMA1_CLK_ENABLE();
+
+	/* DMA interrupt init */
+	/* DMA1_Channel3_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+
+}
 
 /* USER CODE END 4 */
 

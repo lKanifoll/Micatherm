@@ -28,7 +28,7 @@
 #ifndef PIXELS_PPI8_H
 #define PIXELS_PPI8_H
 
-#define pulseLowWR LL_GPIO_ResetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);LL_GPIO_SetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);
+//#define pulseLowWR LL_GPIO_ResetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);LL_GPIO_SetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);
 
 class PPI8 {
 private:
@@ -47,18 +47,20 @@ protected:
 
     void writeCmd(uint8_t b) 
 		{
-			LL_GPIO_ResetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
-			LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | b);
-			pulseLowWR;
+			LL_GPIO_ResetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
+			//LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | b);
+			HAL_SPI_Transmit_DMA(&hspi1, &b, 1);
+			//pulseLowWR;
     }
 
     void writeData(uint8_t data) 
 		{
-			LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
-			LL_GPIO_WriteOutputPort(GPIOA, data);
-			pulseLowWR;
+			LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
+			//LL_GPIO_WriteOutputPort(GPIOA, data);
+			HAL_SPI_Transmit_DMA(&hspi1, &data, 1);
+			//pulseLowWR;
     }
-		
+/*		
 		uint8_t readData()
 		{
 			LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -82,22 +84,24 @@ protected:
 			
 			return result;
 		}
-
+*/
     void writeData(uint8_t hi, uint8_t lo) 
 		{
-			LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
-			LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | hi);
-			LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | lo);
-			pulseLowWR;
+			LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
+			HAL_SPI_Transmit_DMA(&hspi1, &hi, 1);
+			HAL_SPI_Transmit_DMA(&hspi1, &lo, 1);
+			//LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | hi);
+			//LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | lo);
+			//pulseLowWR;
     }
 
     void writeDataTwice(uint8_t b) 
 		{
-			LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
+			LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
 			LL_GPIO_WriteOutputPort(GPIOA, b);
-			pulseLowWR;
+			//pulseLowWR;
 			LL_GPIO_WriteOutputPort(GPIOA, b);
-			pulseLowWR;
+			//pulseLowWR;
     }
 
     void writeCmdData(uint8_t cmd, uint16_t data) {
@@ -127,7 +131,7 @@ public:
     }
 
     inline void registerSelect() {
-      LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);  
+      LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);  
     }
 };
 
@@ -142,8 +146,8 @@ void PPI8::initInterface() {
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	LL_GPIO_ResetOutputPin(LCD_CS_GPIO_Port, LCD_CS_Pin);
-	LL_GPIO_SetOutputPin(LCD_RD_GPIO_Port, LCD_RD_Pin);
-	LL_GPIO_SetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);
+	//LL_GPIO_SetOutputPin(LCD_RD_GPIO_Port, LCD_RD_Pin);
+	//LL_GPIO_SetOutputPin(LCD_WR_GPIO_Port, LCD_WR_Pin);
 	LL_GPIO_SetOutputPin(LCD_BL_GPIO_Port, LCD_BL_Pin);
 
   reset();

@@ -112,6 +112,12 @@
     <Filter Include="VisualGDB settings">
       <UniqueIdentifier>{92ebfd1c-658a-4455-81a1-120b0146b1bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header files\STM32Cube HAL\SPI">
+      <UniqueIdentifier>{9832c1cf-5659-43ec-b394-03c051caeba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\STM32Cube HAL\SPI">
+      <UniqueIdentifier>{bc72ccd9-b37c-45d1-81ff-d185087f0f33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
@@ -213,9 +219,6 @@
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>
-    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
-      <Filter>Source files\Device-specific files</Filter>
-    </ClCompile>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -411,6 +414,12 @@
     <ClCompile Include="maintence.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xe.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_spi.c">
+      <Filter>Source files\STM32Cube HAL\SPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h">
@@ -454,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="maintence.h">
       <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_spi.h">
+      <Filter>Header files\STM32Cube HAL\SPI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

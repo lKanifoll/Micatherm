@@ -80,13 +80,14 @@ public:
 
 void Pixels::init() {
 
-    initInterface();
-
+    //initInterface();
+    reset();
     chipSelect();
     writeCmd(0x11);
+	chipDeselect();
     HAL_Delay(12);
 
-	
+	chipSelect();
     writeCmd(0xB1);
     writeData(0x05);
     writeData(0x3C);
@@ -144,7 +145,8 @@ void Pixels::init() {
 	writeData(0x00);
 	writeData(0xA0);
 	
-
+	writeCmd(0x36);
+	writeData(0xC0);   // 0xC8 - BGR	
 
     writeCmd(0xe0);
     writeData(0x0f);
@@ -202,11 +204,12 @@ void Pixels::init() {
 
     writeCmd(0x29);
 	
-	writeCmd(0x36);
-	writeData(0xC0);  // 0xC8 - BGR	
+
 
 	
     chipDeselect();
+	
+	
 }
 
 void Pixels::scrollCmd() {
@@ -233,7 +236,7 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
     uint8_t lo = lowByte(color);
     uint8_t hi = highByte(color);
 	
-	LL_GPIO_SetOutputPin(LCD_RS_GPIO_Port, LCD_RS_Pin);
+	LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
 	for (int16_t i = 0; i < counter ; i++) {
 		//writeData(hi); writeData(lo);
 		

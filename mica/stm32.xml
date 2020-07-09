@@ -8,8 +8,8 @@
   </ToolchainVersion>
   <BspID>com.sysprogs.arm.stm32</BspID>
   <BspVersion>2020.06</BspVersion>
-  <McuID>STM32F103CB</McuID>
-  <MCUDefinitionFile>STM32F1xxxx/DeviceDefinitions/stm32f103xb.xml</MCUDefinitionFile>
+  <McuID>STM32F103RE</McuID>
+  <MCUDefinitionFile>STM32F1xxxx/DeviceDefinitions/stm32f103xe.xml</MCUDefinitionFile>
   <MCUProperties>
     <Entries>
       <KeyValue>
@@ -85,7 +85,7 @@
     <AllDependencies>
       <ProjectDependency>
         <RelativePath>mica.gpdsc</RelativePath>
-        <Timestamp>132358190061569004</Timestamp>
+        <Timestamp>132387730402966089</Timestamp>
       </ProjectDependency>
     </AllDependencies>
     <RootDirectory>
@@ -433,22 +433,21 @@
           <RelativePath>Src\stm32f1xx_hal_timebase_tim.c</RelativePath>
         </VirtualFileSnapshot>
         <VirtualFileSnapshot>
-          <RelativePath>Drivers\CMSIS\DSP\DSP_Lib_TestSuite\Common\src\main.c</RelativePath>
+          <RelativePath>Src\main.c</RelativePath>
         </VirtualFileSnapshot>
       </Files>
     </RootDirectory>
     <Configurations>
       <ImportedConfiguration>
-        <IsStaticLibrary>false</IsStaticLibrary>
         <Settings>
           <IncludeDirectories>
-            <string>C:\workspace\mica\mica\Inc</string>
-            <string>C:\workspace\mica\mica\Drivers\CMSIS\Device\ST\STM32F1xx\Include</string>
-            <string>C:\workspace\mica\mica\Drivers\STM32F1xx_HAL_Driver\Inc</string>
-            <string>C:\workspace\mica\mica\Drivers\STM32F1xx_HAL_Driver\Src</string>
-            <string>C:\workspace\mica\mica\Middlewares\Third_Party\FreeRTOS\Source\include</string>
-            <string>C:\workspace\mica\mica\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3</string>
-            <string>C:\workspace\mica\mica\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Inc</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Drivers\CMSIS\Device\ST\STM32F1xx\Include</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Inc</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Src</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Middlewares\Third_Party\FreeRTOS\Source\include</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3</string>
+            <string>C:\Users\kochn\Desktop\inprogress\Micatherm\mica\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy</string>
           </IncludeDirectories>
           <PreprocessorMacros>
             <string>$$com.sysprogs.bspoptions.primary_memory$$_layout</string>
