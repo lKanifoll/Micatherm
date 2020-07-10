@@ -31,6 +31,7 @@
 
 #include <main.h>
 #include <stdio.h>
+#include <string.h>
 
 #define PROGMEM
 #define prog_uchar const unsigned char

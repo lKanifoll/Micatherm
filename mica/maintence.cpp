@@ -103,6 +103,9 @@ void buttons_task(void *argument)
 	pxs.setColor(MAIN_COLOR); 
 	pxs.clear();
 	pxs.displayOn();
+	
+	pxs.fillRectangle(0,0,130,160);
+	
 	pxs.setFont(ElectroluxSansRegular10a);
 	TIM3->CCR1 = 65535;
 		

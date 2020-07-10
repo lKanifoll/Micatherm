@@ -229,13 +229,31 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
     chipSelect();
 
     setRegion(x1, y1, x2, y2);
-    int32_t counter = (int32_t)(x2 - x1 + 1) * (y2 - y1 + 1);
+	uint32_t counter = (uint32_t)(x2 - x1 + 1) * (y2 - y1 + 1);
 
     registerSelect();
 
-    uint8_t lo = lowByte(color);
-    uint8_t hi = highByte(color);
+    //uint8_t lo = lowByte(color);
+    //uint8_t hi = highByte(color);
+	/*
+	uint8_t* color_set_ptr = new uint8_t[counter];
 	
+	for (uint32_t i = 0; i < (counter); i+=2)
+	{
+		color_set_ptr[i] = hi; 
+		color_set_ptr[i+1] = lo; 
+	}
+	
+	HAL_SPI_Transmit_DMA(&hspi1, color_set_ptr, counter);
+	delete[] color_set_ptr;
+	*/
+	uint8_t fjfjf[2] = { (uint8_t)highByte(color), (uint8_t)lowByte(color) };
+	for(int16_t i = 0 ; i < counter*2 ; i++) {
+		HAL_SPI_Transmit(&hspi1, fjfjf, 2,0);
+		//HAL_SPI_Transmit(&hspi1, &hi, 1,0);
+		//HAL_SPI_Transmit(&hspi1, &lo, 1,0);
+	}
+	/*
 	LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
 	for (int16_t i = 0; i < counter ; i++) {
 		//writeData(hi); writeData(lo);
@@ -248,7 +266,7 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 		GPIOB->BSRR = GPIO_BSRR_BS8;
 		
 	}
-	GPIOA->BRR = 0xFFFF;
+	GPIOA->BRR = 0xFFFF;*/
 /*	
     for (int16_t i = 0; i < counter / 20; i++) {
         writeData(hi);writeData(lo);

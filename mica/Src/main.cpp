@@ -62,8 +62,8 @@ DMA_HandleTypeDef hdma_spi1_tx;
 /* Definitions for defaultTask */
 osThreadId_t buttons_task_handle;
 const osThreadAttr_t buttons_attributes = {
-    .name = "buttons_task",
-  .stack_size = 256*4,
+  .name = "buttons_task",
+  .stack_size = 512*4,
   .priority = (osPriority_t) osPriorityNormal
 };
 /* USER CODE BEGIN PV */
@@ -120,12 +120,12 @@ int main(void)
   //MX_ADC1_Init();
   MX_DMA_Init();
   MX_SPI1_Init();
-  //MX_IWDG_Init();
-  //MX_RTC_Init();
-  //MX_TIM3_Init();
-  //TIM3->CCR1 = 0;
-    /* USER CODE BEGIN 2 */
-
+	//MX_IWDG_Init();
+	//MX_RTC_Init();
+	//MX_TIM3_Init();
+	//TIM3->CCR1 = 0;
+	  /* USER CODE BEGIN 2 */
+	
 	
 	
   //HAL_ADCEx_Calibration_Start(&hadc1);
@@ -493,7 +493,7 @@ static void MX_SPI1_Init(void)
 	hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
 	hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
 	hspi1.Init.NSS = SPI_NSS_SOFT;
-	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
 	hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
