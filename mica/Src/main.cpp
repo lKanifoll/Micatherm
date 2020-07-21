@@ -21,11 +21,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "maintence.h"
+//#include "maintence.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,10 +45,12 @@ void button_timer_callback(void *argument);
 /* USER CODE BEGIN PM */
 
 void buttons_task(void *argument);
+void graphic_task(void *argument);
 //button power_key(key1_GPIO_Port, key1_Pin);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+osMessageQueueId_t button_Queue;
 ADC_HandleTypeDef hadc1;
 
 IWDG_HandleTypeDef hiwdg;
@@ -63,11 +64,16 @@ DMA_HandleTypeDef hdma_spi1_tx;
 osThreadId_t buttons_task_handle;
 const osThreadAttr_t buttons_attributes = {
   .name = "buttons_task",
-  .stack_size = 512*4,
+  .stack_size = 128*4,
   .priority = (osPriority_t) osPriorityNormal
 };
 /* USER CODE BEGIN PV */
-
+osThreadId_t graphic_task_handle;
+const osThreadAttr_t graphic_attributes = {
+	.name = "graphic_task",
+	.stack_size = 512 * 4,
+	.priority = (osPriority_t) osPriorityNormal
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -141,17 +147,19 @@ int main(void)
   //pxs.setColor(MAIN_COLOR); 
   //pxs.clear();
   //pxs.displayOn();
-  //HAL_Delay(1000);
-	//pxs.fillRectangle(0,0,5,5);
-	//pxs.drawCompressedBitmap(0, 0, img_test3_png_comp);
-  //pxs.setFont(ElectroluxSansRegular14a);
-  //pxs.print(20, 80, "Hello World");
-  //HAL_Delay(5000);
-  //pxs.cleanText(20, 80, "Hello World");
- // pxs.clear();
-  //pxs.drawCompressedBitmap(0, 0, img_test2_png_comp);
 	
 	
+	//HAL_Delay(1000);
+	  //pxs.fillRectangle(0,0,5,5);
+	  //pxs.drawCompressedBitmap(0, 0, img_test3_png_comp);
+	//pxs.setFont(ElectroluxSansRegular14a);
+	//pxs.print(20, 80, "Hello World");
+	//HAL_Delay(5000);
+	//pxs.cleanText(20, 80, "Hello World");
+   // pxs.clear();
+    //pxs.drawCompressedBitmap(0, 0, img_test2_png_comp);
+
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -177,8 +185,10 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
+	button_Queue = osMessageQueueNew(4, 4, NULL);
 	buttons_task_handle = osThreadNew(buttons_task, NULL, &buttons_attributes);
-
+	graphic_task_handle = osThreadNew(graphic_task, NULL, &graphic_attributes);
+	
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */

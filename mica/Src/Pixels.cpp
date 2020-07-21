@@ -18,6 +18,8 @@
 #include "math.h"
 #include "Pixels.h"
 #include "main.h"
+
+extern uint8_t complete_dma;
 RGB::RGB(uint8_t r, uint8_t g, uint8_t b) {
     red = r;
     green = g;
@@ -162,8 +164,11 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
     } else {
         rasterLine = y;
     }
-		
+	
+	LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);  	
+	
     BitStream bs( data, compressedLen, 96 );
+	
     while ( true ) {
 
         uint8_t bit = bs.readBit();
@@ -177,7 +182,7 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                 px <<= 8;
                 px |= bits;
                 if ( orientation == PORTRAIT ) {
-	                GPIOB->BSRR = GPIO_BSRR_BS7;
+	                
                     setCurrentPixel(px);
                 } else 
                 {
@@ -185,7 +190,7 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                     if ( rasterPtr == width ) {
                         setRegion(x, rasterLine, x + width - 1, rasterLine);
                         rasterLine++;
-	                    GPIOB->BSRR = GPIO_BSRR_BS7;
+	                    
                         if( orientation == LANDSCAPE ) {
 	                       
                             for ( int i = 0; i < width; i++ ) {
@@ -233,7 +238,7 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                     px <<= 8;
                     px |= window[p1];
                     if ( orientation == PORTRAIT ) {
-	                    GPIOB->BSRR = GPIO_BSRR_BS7;
+	                    
                         setCurrentPixel(px);
                     } else 
                     {
@@ -241,7 +246,7 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
                         if ( rasterPtr == width ) {
                             setRegion(x, rasterLine, x + width - 1, rasterLine);
                             rasterLine++;
-	                        GPIOB->BSRR = GPIO_BSRR_BS7;
+	                        
                             if( orientation == LANDSCAPE ) {
                                 for ( int i = 0; i < width; i++ ) {
                                     setCurrentPixel(raster[i]);
@@ -277,26 +282,26 @@ int8_t PixelsBase::drawCompressedBitmap(int16_t x, int16_t y, const uint8_t* dat
 
 void PixelsBase::setCurrentPixel(int16_t color) {
 	
-	GPIOA->BSRR = (~highByte(color)) << 16 | highByte(color);
-	GPIOB->BSRR = GPIO_BSRR_BR8;
-	GPIOB->BSRR = GPIO_BSRR_BS8;
-	GPIOA->BSRR = (~lowByte(color)) << 16 | lowByte(color);
-	GPIOB->BSRR = GPIO_BSRR_BR8;
-	GPIOB->BSRR = GPIO_BSRR_BS8;
-	
+	uint8_t ff12[2] = { (uint8_t)highByte(color), (uint8_t)lowByte(color) };
+	//int16_t ff12[1] = { color };
+	//HAL_SPI_Transmit(&hspi1, ff12, 2, 0);
+	//complete_dma = 1;
+	//HAL_SPI_Transmit_DMA(&hspi1, ff12, 2);
+	HAL_SPI_Transmit(&hspi1, ff12, 2,0);
+	//while (complete_dma);
+
     //deviceWriteData(highByte(color), lowByte(color));
 }
 
 void PixelsBase::setCurrentPixel(RGB color) {
     int16_t c = color.convertTo565();
-	GPIOB->BSRR = GPIO_BSRR_BS7;
-	GPIOA->BSRR = (~highByte(c)) << 16 | highByte(c);
-	GPIOB->BSRR = GPIO_BSRR_BR8;
-	GPIOB->BSRR = GPIO_BSRR_BS8;
-	GPIOA->BSRR = (~lowByte(c)) << 16 | lowByte(c);
-	GPIOB->BSRR = GPIO_BSRR_BR8;
-	GPIOB->BSRR = GPIO_BSRR_BS8;
-	
+	uint8_t ff13[2] = { (uint8_t)highByte(c), (uint8_t)lowByte(c) };
+	//int16_t ff13[1] = { c };
+	//HAL_SPI_Transmit(&hspi1, ff13, 2, 0);
+	//complete_dma = 1;
+	//HAL_SPI_Transmit_DMA(&hspi1, ff13, 2);
+	HAL_SPI_Transmit(&hspi1, ff13, 2, 0);
+	//while (complete_dma) ;
     //deviceWriteData(highByte(c), lowByte(c));
 }
 
@@ -814,6 +819,7 @@ void PixelsBase::drawPixel(int16_t x, int16_t y) {
 
     chipSelect();
     setRegion(x, y, x, y);
+	LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);  
     setCurrentPixel(foreground);
     chipDeselect();
 }

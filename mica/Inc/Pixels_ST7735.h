@@ -29,7 +29,7 @@
 #if defined(PIXELS_ANTIALIASING_H)
 #define PixelsBase PixelsAntialiased
 #endif
-
+extern uint8_t complete_dma;
 class Pixels : public PixelsBase
 #if defined(PIXELS_SPISW_H)
                                     , public SPIsw
@@ -47,7 +47,7 @@ protected:
     void setRegion(int16_t x1, int16_t y1, int16_t x2, int16_t y2);
     void quickFill(int b, int16_t x1, int16_t y1, int16_t x2, int16_t y2);
     void setFillDirection(uint8_t direction);
-
+	void *memset16safe(void *m, uint16_t val, size_t count);
     void scrollCmd();
 
 public:
@@ -82,6 +82,7 @@ void Pixels::init() {
 
     //initInterface();
     reset();
+	chipDeselect();
     chipSelect();
     writeCmd(0x11);
 	chipDeselect();
@@ -230,11 +231,13 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 
     setRegion(x1, y1, x2, y2);
 	uint32_t counter = (uint32_t)(x2 - x1 + 1) * (y2 - y1 + 1);
-
+	//chipDeselect();
+	//HAL_Delay(10);
+	//chipSelect();
     registerSelect();
 
-    //uint8_t lo = lowByte(color);
-    //uint8_t hi = highByte(color);
+	//uint8_t lo = lowByte(color);
+	//uint8_t hi = highByte(color);
 	/*
 	uint8_t* color_set_ptr = new uint8_t[counter];
 	
@@ -247,12 +250,25 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	HAL_SPI_Transmit_DMA(&hspi1, color_set_ptr, counter);
 	delete[] color_set_ptr;
 	*/
-	uint8_t fjfjf[2] = { (uint8_t)highByte(color), (uint8_t)lowByte(color) };
-	for(int16_t i = 0 ; i < counter*2 ; i++) {
-		HAL_SPI_Transmit(&hspi1, fjfjf, 2,0);
-		//HAL_SPI_Transmit(&hspi1, &hi, 1,0);
-		//HAL_SPI_Transmit(&hspi1, &lo, 1,0);
-	}
+	complete_dma = 1;
+	uint16_t *ass = new uint16_t[counter];
+	//uint16_t ass[5];
+	//uint8_t ass[5];
+	//uint8_t fff[2] = { (uint8_t)highByte(color), (uint8_t)lowByte(color) };
+	memset16safe(ass, color, counter);
+	
+	//uint8_t *ass1 = (uint8_t *)ass;
+	//for(int16_t i = 0 ; i < counter*2 ; i++) {
+	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)ass, counter*2);
+	while (complete_dma) ;
+	//setCurrentPixel(color);
+	//HAL_SPI_Transmit(&hspi1, &hi, 1,0);
+	//HAL_SPI_Transmit(&hspi1, &lo, 1,0);
+    //}
+     
+	//HAL_Delay(10);
+	chipDeselect();
+	delete[] ass;
 	/*
 	LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
 	for (int16_t i = 0; i < counter ; i++) {
@@ -294,7 +310,7 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
         writeData(hi);writeData(lo);
     }
 */
-    chipDeselect();
+    
 }
 
 void Pixels::setRegion(int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
@@ -350,4 +366,26 @@ void Pixels::deviceWriteData(uint8_t high, uint8_t low) {
     writeData(high);
     writeData(low);
 }
+
+
+void *Pixels::memset16safe(void *m, uint16_t val, size_t count)
+{
+	char *buf = (char *)m;
+	union 
+	{
+		uint8_t d8[2];
+		uint16_t d16;
+	}u16 = { .d16 = val };
+
+	while (count--) 
+	{
+		*buf++ = u16.d8[0];
+		*buf++ = u16.d8[1];
+	}
+	return m;
+}
+
+
+
+
 #endif
