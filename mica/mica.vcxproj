@@ -78,15 +78,15 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
-    <ClCompile Include="buttons.cpp" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_spi.c" />
-    <ClCompile Include="maintence.cpp" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_rcc.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_rcc_ex.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_gpio.c" />
     <ClCompile Include="Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
+    <ClCompile Include="Src\buttons.cpp" />
     <ClCompile Include="Src\draw_functions.cpp" />
     <ClCompile Include="Src\freertos.c" />
+    <ClCompile Include="Src\maintence.cpp" />
     <ClCompile Include="Src\ntc_steinhart.cpp" />
     <ClCompile Include="Src\Pixels.cpp" />
     <ClCompile Include="Src\stm32f1xx_it.c" />
@@ -122,15 +122,15 @@
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim_ex.c" />
     <None Include="stm32.props" />
-    <ClInclude Include="buttons.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_spi.h" />
+    <ClInclude Include="Inc\buttons.h" />
     <ClInclude Include="Inc\draw_functions.h" />
-    <ClInclude Include="maintence.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h" />
     <ClInclude Include="Inc\fonts.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
     <ClInclude Include="Inc\images.h" />
+    <ClInclude Include="Inc\maintence.h" />
     <ClInclude Include="Inc\ntc_steinhart.h" />
     <ClInclude Include="Inc\Pixels.h" />
     <ClInclude Include="Inc\Pixels_Antialiasing.h" />

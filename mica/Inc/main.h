@@ -23,6 +23,8 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,7 +45,10 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "cmsis_os.h"
-	extern SPI_HandleTypeDef hspi1;
+	
+	
+	
+extern SPI_HandleTypeDef hspi1;
 	
 	
 /* USER CODE END Includes */

@@ -408,12 +408,6 @@
     <ClCompile Include="Src\ntc_steinhart.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="buttons.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="maintence.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xe.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
@@ -421,6 +415,12 @@
       <Filter>Source files\STM32Cube HAL\SPI</Filter>
     </ClCompile>
     <ClCompile Include="Src\draw_functions.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\buttons.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\maintence.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -458,19 +458,19 @@
     <ClInclude Include="Inc\fonts.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="buttons.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\ntc_steinhart.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="maintence.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_spi.h">
       <Filter>Header files\STM32Cube HAL\SPI</Filter>
     </ClInclude>
     <ClInclude Include="Inc\draw_functions.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\buttons.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\maintence.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

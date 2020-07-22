@@ -19,7 +19,6 @@
  */
 
 #include "Pixels.h"
-#include "main.h"
 
 #ifdef PIXELS_MAIN
 #error Pixels_PPI8.h must be included before Pixels_<CONTROLLER>.h
