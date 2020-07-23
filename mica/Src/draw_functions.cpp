@@ -9,19 +9,8 @@ uint8_t prev_current_pos = 0;
 
 extern osMessageQueueId_t button_Queue;
 
-void draw_set_timer()
-{
-	if (current_menu->selected_menu == 0)
-	{
-		pxs.cleanText(20, 50, "Bye");
-		pxs.print(20, 50, "Hi");
-	}
-	else
-	{
-		pxs.cleanText(20, 50, "Hi");
-		pxs.print(20, 50, "Bye");
-	}
-}
+	int16_t pic_width = 0;
+	int16_t pic_height = 0;
 void graphic_task(void *argument)
 {
 	pxs.setOrientation(PORTRAIT);
@@ -35,8 +24,7 @@ void graphic_task(void *argument)
 	TIM3->CCR1 = 65535;
 
 	
-	int16_t pic_width = 0;
-	int16_t pic_height = 0;
+
 	
 	osStatus_t status;
 	uint8_t button_status;
@@ -48,31 +36,8 @@ void graphic_task(void *argument)
 		switch(button_status)
 		{
 		case enter:
-			pxs.clear();
-			if (current_menu == NULL) 
-			{
-				current_menu = menu;
-			}
-			else
-			{
-				tmp_current_menu = current_menu;
-				current_menu = &current_menu->next_menu[current_menu->selected_menu];
-				current_menu->prev_menu = tmp_current_menu;
-			}
 			
-			current_menu->selected_menu = 0;
-			
-			if (current_menu->ID == 7)
-			{
-				current_menu->draw_edit_menu();
-			}
-			else
-			{
-				pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.setColor(MAIN_COLOR);
-				pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
-			}
+			enter_confirm();
 			break;
 		case back:
 			if (current_menu == NULL) 
@@ -83,58 +48,161 @@ void graphic_task(void *argument)
 			{
 				tmp_current_menu = current_menu;
 				current_menu = tmp_current_menu->prev_menu;
-			}			
-			
-			pxs.clear();
-			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
-			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
-			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text);
-			pxs.setColor(MAIN_COLOR);
-			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
+			}		
 			break;
+/*			
+			pxs.clear();
+			pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->menu_items[current_menu->selected_menu].icon);
+			pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->menu_items[current_menu->selected_menu].icon);
+			pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->menu_items[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->menu_items[current_menu->selected_menu ? (current_menu->selected_menu - 1) : 3].text);
+			pxs.setColor(MAIN_COLOR);
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->menu_items[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->menu_items[current_menu->selected_menu].text);	
+			break;*/
 		case up:
-			current_menu->selected_menu++;
-			if (current_menu->selected_menu >= current_menu->item_count) current_menu->selected_menu = 0;
-
-			
-			if (current_menu->ID == 7)
-			{
-				current_menu->draw_edit_menu();
-			}
-			else
-			{
-				pxs.setColor(BG_COLOR);
-				pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
-
-				pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : current_menu->item_count - 1].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu ? (current_menu->selected_menu - 1) : current_menu->item_count - 1].text);
-				pxs.setColor(MAIN_COLOR);
-				pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);	
-			}
+			next_menu_param();
 			break;
 		case down:
-			current_menu->selected_menu--;
-			if (current_menu->selected_menu == 255) current_menu->selected_menu = current_menu->item_count - 1;
-			
-			if (current_menu->ID == 7)
-			{
-				current_menu->draw_edit_menu();
-			}
-			else
-			{
-				pxs.setColor(BG_COLOR);
-				pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
-
-				pxs.sizeCompressedBitmap(pic_width, pic_height, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, current_menu->next_menu[current_menu->selected_menu].icon);
-				pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu == (current_menu->item_count - 1) ? 0 : (current_menu->selected_menu + 1)].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu == (current_menu->item_count - 1) ? 0 : (current_menu->selected_menu + 1)].text);
-				pxs.setColor(MAIN_COLOR);
-				pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(current_menu->next_menu[current_menu->selected_menu].text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, current_menu->next_menu[current_menu->selected_menu].text);
-			}
+			prev_menu_param();
 			break;
+			
 		}
 	}
+}
+
+
+void enter_confirm()
+{
+	
+	if (current_menu == NULL) //to main
+	{
+		current_menu = menu;
+		pxs.clear();
+	}
+	else if (current_menu->menu_items != NULL) // next to menu
+	{
+		tmp_current_menu = current_menu;
+		current_menu = &current_menu->menu_items[current_menu->selected_menu];
+		current_menu->prev_menu = tmp_current_menu;
+	}
+	else // ok or confirm
+	{
+		
+	}
+			
+	current_menu->selected_menu = 0;
+	draw_main_menues();
+}
+
+void next_menu_param()
+{
+	current_menu->selected_menu++;
+	if (current_menu->selected_menu >= current_menu->item_count) 
+	{
+		current_menu->selected_menu = 0;
+	}
+	draw_main_menues();
+}
+
+void prev_menu_param()
+{
+	current_menu->selected_menu--;
+	if (current_menu->selected_menu == 255) 
+	{
+		current_menu->selected_menu = current_menu->item_count - 1;
+	}
+	draw_main_menues();
+}
+
+void draw_main_menues()
+{
+	const uint8_t *icon = NULL;
+	static char* text = NULL;
+	
+	pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, text);
+
+	switch (current_menu->menu_items[current_menu->selected_menu].ID)
+	{
+	case 1:
+		icon = img_menu_heatmode_icon_png_comp;
+		text = "Heat mode";
+		break;	
+	case 10:
+		icon = img_menu_mode_comfort_png_comp;
+		text = "Comfort";
+		break;	
+	case 11:
+		icon = img_menu_mode_eco_png_comp;
+		text = "Eco";
+		break;	
+	case 12:
+		icon = img_menu_mode_anti_png_comp;
+		text = "Anti-frost";
+		break;		
+	case 2:
+		icon = img_menu_timer_icon_png_comp;
+		text = "Timer";
+		break;	
+	case 20:
+		icon = img_menu_settimer_png_comp;
+		text = "Set timer";
+		break;
+	case 21:
+		icon = img_menu_timer_on_png_comp;
+		text = "Timer ON";
+		break;		
+	case 3:
+		icon = img_menu_setting_icon_png_comp;
+		text = "Settings";
+		break;
+	case 30:
+		icon = img_menu_setting_datetime_png_comp;
+		text = "Date & time";
+		break;	
+	case 31:
+		icon = img_menu_display_png_comp;
+		text = "Display";
+		break;		
+	case 32:
+		icon = img_menu_setting_sound_on_png_comp;
+		text = "Sound";
+		break;	
+	case 33:
+		icon = img_menu_setting_service_png_comp;
+		text = "Service";
+		break;
+	case 330:
+		icon = img_menu_setting_reset_png_comp;
+		text = "Reset";
+		break;		
+	case 331:
+		icon = img_menu_setting_info_png_comp;
+		text = "Info";
+		break;			
+	case 4:
+		icon = img_menu_program_icon_png_comp;
+		text = "Programme";
+		break;	
+	case 40:
+		icon = img_menu_program_setup_icon_png_comp;
+		text = "Setup";
+		break;		
+	case 41:
+		icon = img_program_cal_on_icon_png_comp;
+		text = "On";
+		break;	
+	case 42:
+		icon = img_menu_program_custom_png_comp;
+		text = "Custom";
+		break;			
+	}
+	
+	pxs.setColor(BG_COLOR);
+	pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
+	pxs.sizeCompressedBitmap(pic_width, pic_height, icon);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, icon);
+	pxs.setColor(MAIN_COLOR);
+	pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, text);	
+
 }
 
 
