@@ -17,7 +17,33 @@ button back_key(key3_GPIO_Port, key3_Pin);
 button down_key(key4_GPIO_Port, key4_Pin);
 button up_key(key5_GPIO_Port, key5_Pin);
 
+const uint32_t FlashSize = 512 * 1024;
+const uint32_t InfoSize = 2 * 1024;
 
+
+
+void WriteSettings(void)
+{
+	uint32_t pageError, addr, *flashData;
+	FLASH_EraseInitTypeDef FLASH_EraseInitStruct;
+  
+	//air_filter_settings.init_memory = INIT_MEMORY_KEY;
+	//air_filter_settings.backup_filter_count = filter_alarm_count;
+	addr = (0x08000000 + FlashSize - InfoSize);
+	FLASH_EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+	FLASH_EraseInitStruct.Banks = FLASH_BANK_1;
+	FLASH_EraseInitStruct.PageAddress = addr;
+	FLASH_EraseInitStruct.NbPages = 1;
+  
+	HAL_FLASH_Unlock();
+	HAL_FLASHEx_Erase(&FLASH_EraseInitStruct, &pageError);
+	//flashData = (uint32_t*)&air_filter_settings;
+	for(uint32_t i = 0 ; i < sizeof(settings) / 4 ; i++)
+	{
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr + i * 4, flashData[i]);
+	}
+	HAL_FLASH_Lock();
+}
 
 
 /* Callback for check button state*/

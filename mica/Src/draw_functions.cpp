@@ -15,8 +15,8 @@ uint8_t prev_current_pos = 0;
 extern osMessageQueueId_t button_Queue;
 int16_t pic_width = 0;
 int16_t pic_height = 0;
-uint8_t temp_set_comfort = 0;
 
+settings_t *device_config;
 
 
 
@@ -34,9 +34,6 @@ void graphic_task(void *argument)
 	pxs.setFont(ElectroluxSansRegular10a);
 	TIM3->CCR1 = 65535;
 
-	
-
-	
 	osStatus_t status;
 	uint8_t button_status;
 	for (;;)
@@ -64,7 +61,7 @@ void graphic_task(void *argument)
 
 void enter_confirm()
 {
-	
+
 	if (current_menu == NULL) //to main
 	{
 		current_menu = menu;
@@ -82,7 +79,10 @@ void enter_confirm()
 	}
 	else // ok or confirm
 	{
-		
+		if (current_menu->confirm != NULL)
+		{
+			current_menu->confirm();
+		}
 	}
 }
 
@@ -137,15 +137,25 @@ void prev_menu_param()
 
 void inc_temp()
 {
-	temp_set_comfort++;
+	device_config->comfort_temp++;
 	draw_submenus();
 }
 
 void dec_temp()
 {
-	temp_set_comfort--;
+	device_config->comfort_temp--;
 	draw_submenus();
 }
+
+void confirm_params()
+{
+	pxs.clear();
+	pxs.sizeCompressedBitmap(pic_width, pic_height, img_ok_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2), img_ok_png_comp);
+	osDelay(2000);
+	menu_back();
+}
+
 void draw_main_menues()
 {
 	if (current_menu->menu_items == NULL)
@@ -251,7 +261,7 @@ void draw_submenus()
 	case 10:
 		
 		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp);
-		sprintf(temp, "%d", temp_set_comfort);
+		sprintf(temp, "%d", device_config->comfort_temp);
 		
 		pxs.setColor(MAIN_COLOR);
 		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp);	

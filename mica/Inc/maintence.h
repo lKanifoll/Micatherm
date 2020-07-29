@@ -14,20 +14,28 @@ typedef enum
 	up,
 	down
 } button_state;
-/*
-typedef struct menu_item
-{
-	uint16_t ID;
-	uint8_t item_count;
-	prog_uchar *icon;
-	char text[20];
-	menu_item *menu_items;
-	menu_item *prev_menu;
-	uint8_t selected_menu;
-	void(*draw_edit_menu)();
 
-} menu_item_t;
-*/
+typedef struct 
+{
+	uint8_t on_off;
+	uint8_t block;
+	uint8_t calendar_on_off;
+	uint8_t brightness;
+	uint8_t auto_off_bkl;
+	uint8_t buzzer_on_off;
+	uint8_t heat_mode;
+	uint8_t power_level;
+	uint8_t working_mode;
+	uint8_t open_window_on_off;
+	uint8_t comfort_temp;
+	uint8_t econom_temp;
+	uint8_t antifrost_temp;
+	uint8_t timer_on_off;
+	uint16_t timer;
+	uint32_t crc;
+	
+}settings_t;
+
 typedef struct menu_item
 {
 	uint16_t ID;
@@ -42,7 +50,7 @@ typedef struct menu_item
 } menu_item_t;
 
 static menu_item_t heatmode_menu[] = { 
-	{ 10, 0, NULL, NULL, inc_temp, dec_temp }, // comfort
+	{ 10, 0, NULL, confirm_params, inc_temp, dec_temp }, // comfort
 	{ 11, 0, NULL }, // eco
 	{ 12, 0, NULL } // anti
 };
@@ -72,10 +80,10 @@ static menu_item_t programme_menu[] = {
 };
 
 static menu_item_t main_menu[] = { 
-	{ 1, 3, heatmode_menu },
-	{ 2, 2, timer_menu },
-	{ 3, 4, settings_menu },
-	{ 4, 3, programme_menu }
+	{ 1, 3, heatmode_menu, NULL, NULL, NULL },
+	{ 2, 2, timer_menu, NULL, NULL, NULL },
+	{ 3, 4, settings_menu, NULL, NULL, NULL },
+	{ 4, 3, programme_menu, NULL, NULL, NULL }
 };
 static menu_item_t menu[] = { 
 	{ 0, 4, main_menu, NULL, NULL, NULL, NULL }
