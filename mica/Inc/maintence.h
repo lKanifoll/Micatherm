@@ -1,8 +1,11 @@
+
+
 #pragma once
+#include "draw_functions.h"
 
-#include "images.h"
+
 #include "fonts.h"
-
+#include "images.h"
 
 typedef enum
 {
@@ -39,19 +42,19 @@ typedef struct menu_item
 } menu_item_t;
 
 static menu_item_t heatmode_menu[] = { 
-	{ 10, 1, NULL },
-	{ 11, 1, NULL },
-	{ 12, 1, NULL }
+	{ 10, 0, NULL, NULL, inc_temp, dec_temp }, // comfort
+	{ 11, 0, NULL }, // eco
+	{ 12, 0, NULL } // anti
 };
 
 static menu_item_t timer_menu[] = {
-	{ 20, 2, NULL },
-	{ 21, 2, NULL }
+	{ 20, 2, NULL }, //set
+	{ 21, 2, NULL } // on\off
 };
 
 static menu_item_t service_menu[] = {
-	{ 330, 0, NULL },
-	{ 331, 0, NULL }	
+	{ 330, 0, NULL }, //reset
+	{ 331, 0, NULL }  // info
 };
 
 static menu_item_t settings_menu[] = {
@@ -75,7 +78,7 @@ static menu_item_t main_menu[] = {
 	{ 4, 3, programme_menu }
 };
 static menu_item_t menu[] = { 
-	{ 0, 4, main_menu, NULL }
+	{ 0, 4, main_menu, NULL, NULL, NULL, NULL }
 };
 
 

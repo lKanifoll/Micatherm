@@ -3,7 +3,7 @@
 
 #include "buttons.h"
 #include "ntc_steinhart.h"
-//#include "draw_functions.h"
+
 
 extern ADC_HandleTypeDef hadc1;
 extern IWDG_HandleTypeDef hiwdg;

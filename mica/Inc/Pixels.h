@@ -24,8 +24,10 @@
  * More platforms coming soon
  */
 
-#ifndef PIXELS_BASE_H
-#define PIXELS_BASE_H
+//#ifndef PIXELS_BASE_H
+//#define PIXELS_BASE_H
+#ifndef __PIXELS_H
+#define __PIXELS_H
 
 // #define DISABLE_ANTIALIASING 1
 

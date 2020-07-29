@@ -1,5 +1,5 @@
-#ifndef __fonts_
-#define __fonts_
+#ifndef __FONTS_H
+#define __FONTS_H
 
 #include "pixels.h"
 
