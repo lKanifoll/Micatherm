@@ -38,7 +38,7 @@ void WriteSettings(void)
 	HAL_FLASH_Unlock();
 	HAL_FLASHEx_Erase(&FLASH_EraseInitStruct, &pageError);
 	//flashData = (uint32_t*)&air_filter_settings;
-	for(uint32_t i = 0 ; i < sizeof(settings) / 4 ; i++)
+	for(uint32_t i = 0 ; i < sizeof(settings_t) / 4 ; i++)
 	{
 		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr + i * 4, flashData[i]);
 	}

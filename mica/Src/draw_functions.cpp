@@ -16,7 +16,7 @@ extern osMessageQueueId_t button_Queue;
 int16_t pic_width = 0;
 int16_t pic_height = 0;
 
-settings_t *device_config;
+
 
 
 
@@ -33,7 +33,7 @@ void graphic_task(void *argument)
 	pxs.displayOn();
 	pxs.setFont(ElectroluxSansRegular10a);
 	TIM3->CCR1 = 65535;
-
+	pxs.fillRectangle(10,10,20,20);
 	osStatus_t status;
 	uint8_t button_status;
 	for (;;)
@@ -137,14 +137,47 @@ void prev_menu_param()
 
 void inc_temp()
 {
-	device_config->comfort_temp++;
+	switch (current_menu->ID)
+	{
+	case 10:
+		device_config.comfort_temp++;
+		break;
+	case 11:
+		device_config.econom_temp ++;
+		break;
+	case 12:
+		device_config.antifrost_temp++;
+		break;
+	}
+	
 	draw_submenus();
 }
 
 void dec_temp()
 {
-	device_config->comfort_temp--;
+	switch (current_menu->ID)
+	{
+	case 10:
+		device_config.comfort_temp--;
+		break;
+	case 11:
+		device_config.econom_temp--;
+		break;
+	case 12:
+		device_config.antifrost_temp--;
+		break;
+	}
 	draw_submenus();
+}
+
+void set_on()
+{
+	device_config.timer_on_off = true;
+}
+
+void set_off()
+{
+	device_config.timer_on_off = false;
 }
 
 void confirm_params()
@@ -174,75 +207,91 @@ void draw_main_menues()
 		{
 		case 1:
 			icon = img_menu_heatmode_icon_png_comp;
-			text = "Heat mode";
+			text = (char*)"Heat mode";
 			break;	
 		case 10:
 			icon = img_menu_mode_comfort_png_comp;
-			text = "Comfort";
+			text = (char*)"Comfort";
 			break;	
 		case 11:
 			icon = img_menu_mode_eco_png_comp;
-			text = "Eco";
+			text = (char*)"Eco";
 			break;	
 		case 12:
 			icon = img_menu_mode_anti_png_comp;
-			text = "Anti-frost";
+			text = (char*)"Anti-frost";
 			break;		
 		case 2:
 			icon = img_menu_timer_icon_png_comp;
-			text = "Timer";
-			break;	
-		case 20:
-			icon = img_menu_settimer_png_comp;
-			text = "Set timer";
+			text = (char*)"Timer";
 			break;
+		case 20:
+			icon = device_config.timer_on_off ? img_menu_timer_on_png_comp : img_menu_timer_off_png_comp;
+			text = device_config.timer_on_off ? (char*)"Timer ON" : (char*)"Timer OFF";
+			break;	
 		case 21:
-			icon = img_menu_timer_on_png_comp;
-			text = "Timer ON";
-			break;		
+			icon = img_menu_settimer_png_comp;
+			text = (char*)"Set timer";
+			break;			
 		case 3:
 			icon = img_menu_setting_icon_png_comp;
-			text = "Settings";
+			text = (char*)"Settings";
 			break;
 		case 30:
 			icon = img_menu_setting_datetime_png_comp;
-			text = "Date & time";
+			text = (char*)"Date & time";
 			break;	
 		case 31:
 			icon = img_menu_display_png_comp;
-			text = "Display";
+			text = (char*)"Display";
 			break;		
 		case 32:
-			icon = img_menu_setting_sound_on_png_comp;
-			text = "Sound";
+			icon = device_config.buzzer_on_off ? img_menu_setting_sound_on_png_comp : img_menu_setting_sound_off_png_comp;
+			text = (char*)"Sound";
 			break;	
 		case 33:
 			icon = img_menu_setting_service_png_comp;
-			text = "Service";
+			text = (char*)"Service";
 			break;
+		case 300:
+			icon = img_menu_program_icon_png_comp;
+			text = (char*)"Set date";
+			break;		
+		case 301:
+			icon = img_menu_settime_png_comp;
+			text = (char*)"Set time";
+			break;		
+		case 310:
+			icon = img_menu_display_bri_png_comp;
+			text = (char*)"Brightness";
+			break;		
+		case 311:
+			icon = img_menu_display_auto_png_comp;
+			text = (char*)"Auto switch off";
+			break;			
 		case 330:
 			icon = img_menu_setting_reset_png_comp;
-			text = "Reset";
+			text = (char*)"Reset";
 			break;		
 		case 331:
 			icon = img_menu_setting_info_png_comp;
-			text = "Info";
+			text = (char*)"Info";
 			break;			
 		case 4:
 			icon = img_menu_program_icon_png_comp;
-			text = "Programme";
+			text = (char*)"Programme";
 			break;	
 		case 40:
 			icon = img_menu_program_setup_icon_png_comp;
-			text = "Setup";
+			text = (char*)"Setup";
 			break;		
 		case 41:
-			icon = img_program_cal_on_icon_png_comp;
-			text = "On";
+			icon = device_config.calendar_on_off ? img_program_cal_on_icon_png_comp : img_program_cal_off_icon_png_comp;
+			text = device_config.calendar_on_off ? (char*)"On" : (char*)"Off";
 			break;	
 		case 42:
 			icon = img_menu_program_custom_png_comp;
-			text = "Custom";
+			text = (char*)"Custom";
 			break;			
 		}
 		pxs.setColor(BG_COLOR);
@@ -254,23 +303,32 @@ void draw_main_menues()
 	}
 }
 char temp[3];
+char temp1[3];
+char temp2[3];
 void draw_submenus()
 {
 	switch (current_menu->ID)
 	{
 	case 10:
-		
 		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp);
-		sprintf(temp, "%d", device_config->comfort_temp);
+		sprintf(temp, "%d", device_config.comfort_temp);
 		
 		pxs.setColor(MAIN_COLOR);
 		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp);	
 		break;	
 	case 11:
-
+		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp1) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp1);
+		sprintf(temp1, "%d", device_config.econom_temp );
+		
+		pxs.setColor(MAIN_COLOR);
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp1) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp1);	
 		break;	
 	case 12:
-
+		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp2) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp2);
+		sprintf(temp2, "%d", device_config.antifrost_temp );
+		
+		pxs.setColor(MAIN_COLOR);
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(temp2) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, temp2);	
 		break;	
 	}
 }

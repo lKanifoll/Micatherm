@@ -49,15 +49,26 @@ typedef struct menu_item
 
 } menu_item_t;
 
+static settings_t device_config;
+
 static menu_item_t heatmode_menu[] = { 
 	{ 10, 0, NULL, confirm_params, inc_temp, dec_temp }, // comfort
-	{ 11, 0, NULL }, // eco
-	{ 12, 0, NULL } // anti
+	{ 11, 0, NULL, confirm_params, inc_temp, dec_temp }, // eco
+	{ 12, 0, NULL, confirm_params, inc_temp, dec_temp } // anti
 };
 
 static menu_item_t timer_menu[] = {
 	{ 20, 2, NULL }, //set
-	{ 21, 2, NULL } // on\off
+	{ 21, 2, NULL, confirm_params, set_on, set_off}  // on\off
+};
+static menu_item_t date_time[] = {
+	{ 300, 0, NULL }, // date
+	{ 301, 0, NULL }  // time
+};
+
+static menu_item_t display[] = {
+	{ 310, 0, NULL }, 
+	{ 311, 0, NULL }  
 };
 
 static menu_item_t service_menu[] = {
@@ -66,8 +77,8 @@ static menu_item_t service_menu[] = {
 };
 
 static menu_item_t settings_menu[] = {
-	{ 30, 2, NULL },
-	{ 31, 2, NULL },
+	{ 30, 2, date_time },
+	{ 31, 2, display },
 	{ 32, 0, NULL },
 	{ 33, 2, service_menu }
 };
