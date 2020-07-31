@@ -7,8 +7,11 @@
 #define DX0 2
 #define DY0 1
 
+// Display has strange color order: RBG & BRG
+// In Pixels.cpp conversion RGB: changed green<->blue
+
 #define BG_COLOR	RGB(0x00, 0x00, 0x00)
-#define MAIN_COLOR	RGB(0xff, 0xff, 0xFF)
+#define MAIN_COLOR	RGB(0xFF, 0xFF, 0xFF)
 #define Green_COLOR	RGB(0x00, 0xFF, 0x00)
 
 

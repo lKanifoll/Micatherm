@@ -86,26 +86,26 @@ void Pixels::init() {
     chipSelect();
     writeCmd(0x11);
 	chipDeselect();
-    HAL_Delay(12);
+    HAL_Delay(120);
 
 	chipSelect();
     writeCmd(0xB1);
     writeData(0x05);
     writeData(0x3C);
-    writeData(0x3D);
+    writeData(0x3C);
 	
     writeCmd(0xB2);
 	writeData(0x05);
 	writeData(0x3C);
-	writeData(0x3D);
+	writeData(0x3C);
 	
     writeCmd(0xB3);
 	writeData(0x05);
 	writeData(0x3C);
-	writeData(0x3D);
+	writeData(0x3C);
 	writeData(0x05);
 	writeData(0x3C);
-	writeData(0x3D);
+	writeData(0x3C);
 
     writeCmd(0xB4);
     writeData(0x03);
@@ -131,9 +131,12 @@ void Pixels::init() {
     writeData(0xEE);
 
     writeCmd(0xC5);
-    writeData(0x1A);
-	writeCmd(0x3A);
-	writeData(0x05);
+    writeData(0x18);
+	
+	writeCmd(0x36);
+	writeData(0xC0);    // 0xC8 - BGR	
+	/*
+
 	
 	writeCmd(0x2a);
 	writeData(0x00);
@@ -145,10 +148,43 @@ void Pixels::init() {
 	writeData(0x01);
 	writeData(0x00);
 	writeData(0xA0);
-	
-	writeCmd(0x36);
-	writeData(0xC0);   // 0xC8 - BGR	
+	*/
+    writeCmd(0xE0);     
+	writeData(0x04);   
+	writeData(0x1B);   
+	writeData(0x1C);   
+	writeData(0x1E);   
+	writeData(0x3C);   
+	writeData(0x33);
+	writeData(0x29); 
+	writeData(0x2B);   
+	writeData(0x2A);   
+	writeData(0x26);   
+	writeData(0x2E);   
+	writeData(0x39);   
+	writeData(0x00);   
+	writeData(0x02);   
+	writeData(0x02);   
+	writeData(0x10);   
 
+	writeCmd(0xE1);     
+	writeData(0x04);   
+	writeData(0x1B);   
+	writeData(0x1C);   
+	writeData(0x1E);  
+	writeData(0x3C);   
+	writeData(0x33);  
+	writeData(0x29);  
+	writeData(0x2B);   
+	writeData(0x29);   
+	writeData(0x26);   
+	writeData(0x2E);   
+	writeData(0x39);   
+	writeData(0x00);   
+	writeData(0x02);   
+	writeData(0x02);   
+	writeData(0x10);   
+/*
     writeCmd(0xe0);
     writeData(0x0f);
     writeData(0x1a);
@@ -184,9 +220,10 @@ void Pixels::init() {
     writeData(0x07);
     writeData(0x03);
     writeData(0x10);
-
-
-
+*/
+	writeCmd(0x3A);
+	writeData(0x05);
+	//writeCmd(0x38);
 //writeCmd(0x2a);
     //writeData(0x00);
     //writeData(0x00);
@@ -198,11 +235,12 @@ void Pixels::init() {
     //writeData(0x00);
     //writeData(0x9f);
 
-    writeCmd(0xF0);
-    writeData(0x01);
-    writeCmd(0xF6);
-    writeData(0x00);
-
+    //writeCmd(0xF0);
+    //writeData(0x01);
+    //writeCmd(0xF6);
+    //writeData(0x00);
+    writeCmd(0x11);       // Sleep out
+    HAL_Delay(120);
     writeCmd(0x29);
 	
 
@@ -236,8 +274,6 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	//chipSelect();
     registerSelect();
 
-	//uint8_t lo = lowByte(color);
-	//uint8_t hi = highByte(color);
 	/*
 	uint8_t* color_set_ptr = new uint8_t[counter];
 	
@@ -255,7 +291,7 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	//uint16_t ass[5];
 	//uint8_t ass[5];
 	//uint8_t fff[2] = { (uint8_t)highByte(color), (uint8_t)lowByte(color) };
-	memset16safe(ass, color, counter);
+	memset16safe(ass, highByte(color) | lowByte(color) << 8, counter);
 	
 	//uint8_t *ass1 = (uint8_t *)ass;
 	//for(int16_t i = 0 ; i < counter*2 ; i++) {

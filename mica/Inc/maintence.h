@@ -104,5 +104,5 @@ static menu_item_t menu[] = {
 
 
 
-void screen_smooth_transition();
+void screen_smooth_transition(uint8_t on_off);
 uint32_t get_raw_adc_meas();

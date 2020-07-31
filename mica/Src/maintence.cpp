@@ -1,14 +1,12 @@
 
 #include "maintence.h"
-
 #include "buttons.h"
 #include "ntc_steinhart.h"
-
 
 extern ADC_HandleTypeDef hadc1;
 extern IWDG_HandleTypeDef hiwdg;
 extern RTC_HandleTypeDef hrtc;
-extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
 extern uint8_t complete_dma;
 extern osMessageQueueId_t button_Queue;
 
@@ -19,8 +17,6 @@ button up_key(key5_GPIO_Port, key5_Pin);
 
 const uint32_t FlashSize = 512 * 1024;
 const uint32_t InfoSize = 2 * 1024;
-
-
 
 void WriteSettings(void)
 {
@@ -63,7 +59,6 @@ void buttons_task(void *argument)
 	uint8_t button_state = 0;
 	for (;;)
 	{
-		
 		if (enter_key.button_short_is_pressed())
 		{
 			button_state = enter;
@@ -96,18 +91,23 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	complete_dma = 0;
 }
 
-void screen_smooth_transition()
+void screen_smooth_transition(uint8_t on_off)
 {
-	while (TIM3->CCR1 > 1000)
+	if (on_off)
 	{
-		TIM3->CCR1 -= 1000;
-		HAL_Delay(1);
+		while (TIM4->CCR3 < 65000)
+		{
+			TIM4->CCR3 += 500;
+			osDelay(2);
+		}
 	}
-	HAL_Delay(100);
-	while (TIM3->CCR1 < 65000)
+	else
 	{
-		TIM3->CCR1 += 500;
-		HAL_Delay(2);
+		while (TIM4->CCR3 > 1000)
+		{
+			TIM4->CCR3 -= 5000;
+			osDelay(1);
+		}
 	}
 }
 

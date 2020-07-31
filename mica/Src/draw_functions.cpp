@@ -17,7 +17,7 @@ int16_t pic_width = 0;
 int16_t pic_height = 0;
 
 
-
+extern TIM_HandleTypeDef htim4;
 
 
 
@@ -32,14 +32,15 @@ void graphic_task(void *argument)
 	pxs.clear();
 	pxs.displayOn();
 	pxs.setFont(ElectroluxSansRegular10a);
-	TIM3->CCR1 = 65535;
-	pxs.fillRectangle(10,10,20,20);
+	//TIM4->CCR3 = 64535;
+
+	
 	osStatus_t status;
 	uint8_t button_status;
 	for (;;)
 	{
 		status = osMessageQueueGet(button_Queue, &button_status, NULL, 0xFFFFFFFF);      
-				
+		
 		switch(button_status)
 		{
 		case enter:			
@@ -191,6 +192,7 @@ void confirm_params()
 
 void draw_main_menues()
 {
+	screen_smooth_transition(0);
 	if (current_menu->menu_items == NULL)
 	{
 		pxs.clear();
@@ -301,6 +303,7 @@ void draw_main_menues()
 		pxs.setColor(MAIN_COLOR);
 		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, text);	
 	}
+	screen_smooth_transition(1);
 }
 char temp[3];
 char temp1[3];

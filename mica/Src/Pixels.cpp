@@ -299,8 +299,12 @@ void PixelsBase::setCurrentPixel(RGB color) {
 	//int16_t ff13[1] = { c };
 	//HAL_SPI_Transmit(&hspi1, ff13, 2, 0);
 	//complete_dma = 1;
+	//uint8_t hi = highByte(c);
+	//uint8_t lo = lowByte(c);
 	//HAL_SPI_Transmit_DMA(&hspi1, ff13, 2);
 	HAL_SPI_Transmit(&hspi1, ff13, 2, 0);
+	//HAL_SPI_Transmit(&hspi1, &hi, 1, 0);
+	//HAL_SPI_Transmit(&hspi1, &lo, 1, 0);
 	//while (complete_dma) ;
     //deviceWriteData(highByte(c), lowByte(c));
 }
