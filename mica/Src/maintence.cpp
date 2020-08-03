@@ -9,6 +9,11 @@ extern RTC_HandleTypeDef hrtc;
 extern TIM_HandleTypeDef htim4;
 extern uint8_t complete_dma;
 extern osMessageQueueId_t button_Queue;
+extern temper_t temp_tmp;
+extern on_off_t on_off_tmp;
+extern menu_item_t *current_menu;
+extern settings_t device_config;
+
 
 button enter_key(key2_GPIO_Port, key2_Pin);
 button back_key(key3_GPIO_Port, key3_Pin);
@@ -17,6 +22,79 @@ button up_key(key5_GPIO_Port, key5_Pin);
 
 const uint32_t FlashSize = 512 * 1024;
 const uint32_t InfoSize = 2 * 1024;
+
+
+void prepare_settings(menu_item_t *current_menu)
+{
+	switch (current_menu->ID)
+	{
+	case 10:
+		temp_tmp.new_temp_p = device_config.comfort_temp;
+		temp_tmp.old_temp_p = device_config.comfort_temp;
+		break;
+	case 11:
+		temp_tmp.new_temp_p = device_config.econom_temp;
+		temp_tmp.old_temp_p = device_config.econom_temp;
+		break;
+	case 12:
+		temp_tmp.new_temp_p = device_config.antifrost_temp;
+		temp_tmp.old_temp_p = device_config.antifrost_temp;
+		break;
+	case 20:
+		on_off_tmp.new_p = device_config.timer_on_off;
+		on_off_tmp.old_p = device_config.timer_on_off;
+		break;
+	case 41:
+		on_off_tmp.new_p = device_config.calendar_on_off;
+		on_off_tmp.old_p = device_config.calendar_on_off;
+		break;
+	case 32:
+		on_off_tmp.new_p = device_config.buzzer_on_off;
+		on_off_tmp.old_p = device_config.buzzer_on_off;
+		break;
+	case 310:
+		on_off_tmp.new_p = device_config.brightness;
+		on_off_tmp.old_p = device_config.brightness;
+		break;
+	case 311:
+		on_off_tmp.new_p = device_config.auto_off_bkl;
+		on_off_tmp.old_p = device_config.auto_off_bkl;
+		break;
+	}
+	
+}
+
+void accept_settings(menu_item_t *current_menu)
+{
+	switch (current_menu->ID)
+	{
+	case 10:
+		device_config.comfort_temp = temp_tmp.new_temp_p;
+		break;
+	case 11:
+		device_config.econom_temp = temp_tmp.new_temp_p;
+		break;
+	case 12:
+		device_config.antifrost_temp = temp_tmp.new_temp_p;
+		break;
+	case 20:
+		device_config.timer_on_off = on_off_tmp.new_p;
+		break;
+	case 41:
+		device_config.calendar_on_off = on_off_tmp.new_p;
+		break;
+	case 32:
+		device_config.buzzer_on_off = on_off_tmp.new_p;
+		break;
+	case 310:
+		device_config.brightness = on_off_tmp.new_p;
+		break;
+	case 311:
+		device_config.auto_off_bkl = on_off_tmp.new_p;
+		break;
+	}	
+}
+
 
 void WriteSettings(void)
 {
@@ -97,7 +175,7 @@ void screen_smooth_transition(uint8_t on_off)
 	{
 		while (TIM4->CCR3 < 65000)
 		{
-			TIM4->CCR3 += 500;
+			TIM4->CCR3 += 750;
 			osDelay(2);
 		}
 	}

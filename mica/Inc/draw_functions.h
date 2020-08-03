@@ -4,8 +4,8 @@
 
 #define DISPLAY_HEIGHT 161
 #define DISPLAY_WIDTH  130
-#define DX0 2
-#define DY0 1
+#define DX0 0
+#define DY0 0
 
 // Display has strange color order: RBG & BRG
 // In Pixels.cpp conversion RGB: changed green<->blue

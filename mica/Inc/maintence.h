@@ -2,10 +2,23 @@
 
 #pragma once
 #include "draw_functions.h"
-
-
 #include "fonts.h"
 #include "images.h"
+
+
+
+
+typedef struct
+{
+	uint8_t old_p;
+	uint8_t new_p;
+} on_off_t;
+
+typedef struct
+{
+	uint8_t old_temp_p;
+	uint8_t new_temp_p;
+} temper_t;
 
 typedef enum
 {
@@ -49,7 +62,10 @@ typedef struct menu_item
 
 } menu_item_t;
 
-static settings_t device_config;
+
+
+
+
 
 static menu_item_t heatmode_menu[] = { 
 	{ 10, 0, NULL, confirm_params, inc_temp, dec_temp }, // comfort
@@ -58,8 +74,9 @@ static menu_item_t heatmode_menu[] = {
 };
 
 static menu_item_t timer_menu[] = {
-	{ 20, 2, NULL }, //set
-	{ 21, 2, NULL, confirm_params, set_on, set_off}  // on\off
+	
+	{ 20, 2, NULL, confirm_params, set_off, set_on} , // on\off
+	{ 21, 2, NULL }  //set
 };
 static menu_item_t date_time[] = {
 	{ 300, 0, NULL }, // date
@@ -67,8 +84,8 @@ static menu_item_t date_time[] = {
 };
 
 static menu_item_t display[] = {
-	{ 310, 0, NULL }, 
-	{ 311, 0, NULL }  
+	{ 310, 0, NULL, confirm_params, set_off, set_on }, 
+	{ 311, 0, NULL, confirm_params, set_off, set_on }  
 };
 
 static menu_item_t service_menu[] = {
@@ -79,14 +96,14 @@ static menu_item_t service_menu[] = {
 static menu_item_t settings_menu[] = {
 	{ 30, 2, date_time },
 	{ 31, 2, display },
-	{ 32, 0, NULL },
+	{ 32, 0, NULL, confirm_params, set_off, set_on },
 	{ 33, 2, service_menu }
 };
 
 static menu_item_t programme_menu[] = {
 	
 	{ 40, 0, NULL },
-	{ 41, 0, NULL },
+	{ 41, 0, NULL, confirm_params, set_off, set_on },
 	{ 42, 0, NULL },
 };
 
@@ -106,3 +123,5 @@ static menu_item_t menu[] = {
 
 void screen_smooth_transition(uint8_t on_off);
 uint32_t get_raw_adc_meas();
+void prepare_settings(menu_item_t *current_menu);
+void accept_settings(menu_item_t *current_menu);
