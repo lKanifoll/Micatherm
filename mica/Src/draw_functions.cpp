@@ -141,12 +141,15 @@ void inc_temp()
 	{
 	case 10:
 		temp_tmp.new_temp_p++;
+		temp_tmp.new_temp_p == 36 ? temp_tmp.new_temp_p = 10 : temp_tmp.new_temp_p;
 		break;
 	case 11:
 		temp_tmp.new_temp_p++;
+		temp_tmp.new_temp_p == 8 ? temp_tmp.new_temp_p = 3 : temp_tmp.new_temp_p;
 		break;
 	case 12:
 		temp_tmp.new_temp_p++;
+		temp_tmp.new_temp_p == 8 ? temp_tmp.new_temp_p = 3 : temp_tmp.new_temp_p;
 		break;
 	}
 	
@@ -159,12 +162,15 @@ void dec_temp()
 	{
 	case 10:
 		temp_tmp.new_temp_p--;
+		temp_tmp.new_temp_p == 9 ? temp_tmp.new_temp_p = 35 : temp_tmp.new_temp_p;
 		break;
 	case 11:
 		temp_tmp.new_temp_p--;
+		temp_tmp.new_temp_p == 2 ? temp_tmp.new_temp_p = 7 : temp_tmp.new_temp_p;
 		break;
 	case 12:
 		temp_tmp.new_temp_p--;
+		temp_tmp.new_temp_p == 2 ? temp_tmp.new_temp_p = 7 : temp_tmp.new_temp_p;
 		break;
 	}
 	draw_submenus();
@@ -314,27 +320,29 @@ void draw_main_menues()
 
 void draw_submenus()
 {
-	int16_t width_tmp;
+	static int16_t width_tmp;
 	switch (current_menu->ID)
 	{
 	case 10:
 	case 11:
 	case 12:
 		static char tmp_t[2];
+		static char celsius[2] = { '\xB0', '\x43' };
 		
 		pxs.setFont(ElectroluxSansLight40a);
-		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2), DY0 + DISPLAY_HEIGHT / 2 , tmp_t);
+		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 , tmp_t);
 		pxs.setFont(ElectroluxSansLight16a);
-		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 + (pxs.getTextWidth(tmp_t) / 2), DY0 + DISPLAY_HEIGHT / 2, (char*)"\xB0\x43");
+		pxs.cleanText((DX0 + DISPLAY_WIDTH / 2) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2, celsius);	
+		
 		pxs.setFont(ElectroluxSansLight40a);
 		sprintf(tmp_t, "%d", temp_tmp.new_temp_p);
 		width_tmp = pxs.getTextWidth(tmp_t);
 		pxs.setColor(MAIN_COLOR);
 		
-		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (width_tmp / 2), DY0 + DISPLAY_HEIGHT / 2, tmp_t);	
+		pxs.print((DX0 + DISPLAY_WIDTH / 2) - (width_tmp / 2) - 15, DY0 + DISPLAY_HEIGHT / 2, tmp_t);	
 		
 		pxs.setFont(ElectroluxSansLight16a);
-		pxs.print((DX0 + (DISPLAY_WIDTH / 2)) + width_tmp/2, DY0 + DISPLAY_HEIGHT / 2, (char*)"\xB0\x43");	
+		pxs.print((DX0 + (DISPLAY_WIDTH / 2)) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2, celsius);	
 		break;
 	case 41:
 		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"Programme") / 2), 10, (char*)"Programme");	

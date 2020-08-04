@@ -40,9 +40,9 @@ typedef struct
 	uint8_t power_level;
 	uint8_t working_mode;
 	uint8_t open_window_on_off;
-	uint8_t comfort_temp;
-	uint8_t econom_temp;
-	uint8_t antifrost_temp;
+	uint8_t comfort_temp = 24;
+	uint8_t econom_temp = 7;
+	uint8_t antifrost_temp = 5;
 	uint8_t timer_on_off;
 	uint16_t timer;
 	uint32_t crc;
