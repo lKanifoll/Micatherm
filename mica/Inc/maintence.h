@@ -89,8 +89,8 @@ static menu_item_t display[] = {
 };
 
 static menu_item_t service_menu[] = {
-	{ 330, 0, NULL }, //reset
-	{ 331, 0, NULL }  // info
+	{ 330, 0, NULL, confirm_params, set_off, set_on, NULL, 1}, //reset
+	{ 331, 0, NULL, confirm_params }  // info
 };
 
 static menu_item_t settings_menu[] = {

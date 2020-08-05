@@ -18,7 +18,9 @@ extern settings_t device_config;
 button enter_key(key2_GPIO_Port, key2_Pin);
 button back_key(key3_GPIO_Port, key3_Pin);
 button down_key(key4_GPIO_Port, key4_Pin);
-button up_key(key5_GPIO_Port, key5_Pin);
+button up_key(key0_GPIO_Port, key0_Pin);
+button power_key(key1_GPIO_Port, key1_Pin);
+button window_key(key5_GPIO_Port, key5_Pin);
 
 const uint32_t FlashSize = 512 * 1024;
 const uint32_t InfoSize = 2 * 1024;
@@ -91,6 +93,9 @@ void accept_settings(menu_item_t *current_menu)
 		break;
 	case 311:
 		device_config.auto_off_bkl = on_off_tmp.new_p;
+		break;
+	case 330:
+		current_menu->selected_menu--;
 		break;
 	}	
 }

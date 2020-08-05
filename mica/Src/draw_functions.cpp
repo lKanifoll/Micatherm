@@ -73,7 +73,10 @@ void enter_confirm()
 		tmp_current_menu = &current_menu->menu_items[current_menu->selected_menu];
 		tmp_current_menu->prev_menu = current_menu;
 		current_menu = tmp_current_menu;
-		current_menu->selected_menu = 0;
+		if (current_menu->item_count)
+		{
+			current_menu->selected_menu = 0;
+		}
 		prepare_settings(current_menu);
 		draw_main_menues();
 	}
@@ -194,11 +197,34 @@ void confirm_params()
 	pxs.sizeCompressedBitmap(pic_width, pic_height, img_ok_png_comp);
 	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2), img_ok_png_comp);
 	osDelay(1000);
+	pxs.setColor(BG_COLOR);
+	pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2), pic_width, pic_height);
+	pxs.setColor(MAIN_COLOR);
 	
-	accept_settings(current_menu);
-	
-	menu_back();
+	if (current_menu->selected_menu)
+	{
+		switch (current_menu->ID)
+		{
+		case 330:
+			if (on_off_tmp.new_p)
+			{
+				accept_settings(current_menu);
+				draw_submenus();
+			}
+			else
+			{
+				menu_back();
+			}
+			break;
+		}
+	}
+	else
+	{
+		accept_settings(current_menu);
+		menu_back();
+	}
 }
+
 
 void draw_main_menues()
 {
@@ -214,8 +240,8 @@ void draw_main_menues()
 	{
 		const uint8_t *icon = NULL;
 		static char* text = NULL;
-		
-		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, text);
+		draw_arrows();
+		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 25, text);
 
 		switch (current_menu->menu_items[current_menu->selected_menu].ID)
 		{
@@ -289,7 +315,7 @@ void draw_main_menues()
 			break;		
 		case 331:
 			icon = img_menu_setting_info_png_comp;
-			text = (char*)"Info";
+			text = (char*)"Information";
 			break;			
 		case 4:
 			icon = img_menu_program_icon_png_comp;
@@ -309,11 +335,11 @@ void draw_main_menues()
 			break;			
 		}
 		pxs.setColor(BG_COLOR);
-		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
+		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2) - 1, DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, pic_width, pic_height);
 		pxs.sizeCompressedBitmap(pic_width, pic_height, icon);
-		pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, icon);
+		pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2) - 1, DY0 + DISPLAY_HEIGHT / 2 - (pic_height / 2) - 15, icon);
 		pxs.setColor(MAIN_COLOR);
-		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 30, text);	
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(text) / 2), DY0 + DISPLAY_HEIGHT / 2 + 25, text);	
 	}
 	screen_smooth_transition(1);
 }
@@ -321,6 +347,7 @@ void draw_main_menues()
 void draw_submenus()
 {
 	static int16_t width_tmp;
+	pxs.setFont(ElectroluxSansRegular14a);
 	switch (current_menu->ID)
 	{
 	case 10:
@@ -328,37 +355,65 @@ void draw_submenus()
 	case 12:
 		static char tmp_t[2];
 		static char celsius[2] = { '\xB0', '\x43' };
-		
-		pxs.setFont(ElectroluxSansLight40a);
-		pxs.cleanText(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 , tmp_t);
-		pxs.setFont(ElectroluxSansLight16a);
-		pxs.cleanText((DX0 + DISPLAY_WIDTH / 2) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2, celsius);	
+		draw_arrows();
+
+		pxs.setColor(BG_COLOR);
+		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, pxs.getTextWidth(tmp_t), pxs.getTextLineHeight());
+		pxs.setColor(MAIN_COLOR);
 		
 		pxs.setFont(ElectroluxSansLight40a);
 		sprintf(tmp_t, "%d", temp_tmp.new_temp_p);
 		width_tmp = pxs.getTextWidth(tmp_t);
 		pxs.setColor(MAIN_COLOR);
 		
-		pxs.print((DX0 + DISPLAY_WIDTH / 2) - (width_tmp / 2) - 15, DY0 + DISPLAY_HEIGHT / 2, tmp_t);	
+		pxs.print((DX0 + DISPLAY_WIDTH / 2) - (width_tmp / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, tmp_t);	
 		
 		pxs.setFont(ElectroluxSansLight16a);
-		pxs.print((DX0 + (DISPLAY_WIDTH / 2)) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2, celsius);	
+		pxs.print((DX0 + (DISPLAY_WIDTH / 2)) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, celsius);	
 		break;
 	case 41:
 		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"Programme") / 2), 10, (char*)"Programme");	
 	case 32:
 	case 20:
 	case 311:
-		pxs.setFont(ElectroluxSansRegular14a);
 		DrawTextSelected(10, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2, (char*)"ON", on_off_tmp.new_p, on_off_tmp.old_p, 5, 15);
 		DrawTextSelected(80, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2, (char*)"OFF", !on_off_tmp.new_p, !on_off_tmp.old_p, 5, 15);
 		break;
 	case 310:
-		pxs.setFont(ElectroluxSansRegular14a);
 		DrawTextSelected(8, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2, (char*)"50%", on_off_tmp.new_p, on_off_tmp.old_p, 5, 15);
 		DrawTextSelected(65, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2, (char*)"100%", !on_off_tmp.new_p, !on_off_tmp.old_p, 5, 15);
 		break;
+	case 330:
+		pxs.setColor(MAIN_COLOR);
+		pxs.setFont(ElectroluxSansRegular10a); 
+		if (current_menu->selected_menu)
+		{
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"Reset all device") / 2), 10, (char*)"Reset all device");
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"settings?") / 2), 30, (char*)"settings?");
+			DrawTextSelected(18, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2 + 25, (char*)"Yes", on_off_tmp.new_p, NULL, 10, 15);
+			DrawTextSelected(88, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2 + 25, (char*)"No", !on_off_tmp.new_p, NULL, 10, 15);		
+		}
+		else
+		{
+			pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"Are you sure?") / 2), 10, (char*)"Are you sure?");
+			DrawTextSelected(18, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2 + 25, (char*)"Yes", on_off_tmp.new_p, NULL, 10, 15);
+			DrawTextSelected(88, DY0 + DISPLAY_HEIGHT / 2 - pxs.getTextLineHeight() / 2 + 25, (char*)"No", !on_off_tmp.new_p, NULL, 10, 15);	
+		}
+		break;
+	case 331:
+		pxs.setFont(ElectroluxSansRegular10a); 
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"Current") / 2), 50, (char*)"Current");
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"firmware:") / 2), 70, (char*)"firmware:");
+		pxs.print(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth((char*)"12.2.8") / 2), 90, (char*)"12.2.8");
+		break;
 	}
+}
+
+
+void draw_arrows()
+{
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (28 / 2), 3, img_up_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (28 / 2), 142, img_down_png_comp);
 }
 
 
