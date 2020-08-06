@@ -1201,17 +1201,17 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
 
   hrtc->State = HAL_RTC_STATE_BUSY;
 
-  /* Call HAL_RTC_GetTime function to update date if counter higher than 24 hours */
+  /* Call HAL_RTC_GetTime function to update date if counter higher than 24 hours*/ 
   if (HAL_RTC_GetTime(hrtc, &stime, RTC_FORMAT_BIN) != HAL_OK)
   {
     return HAL_ERROR;
   }
 
-  /* Convert time in seconds */
+  /* Convert time in seconds*/
   counter_time = (uint32_t)(((uint32_t)stime.Hours * 3600U) + \
                             ((uint32_t)stime.Minutes * 60U) + \
                             ((uint32_t)stime.Seconds));
-
+ 
   if (Format == RTC_FORMAT_BIN)
   {
     assert_param(IS_RTC_HOUR24(sAlarm->AlarmTime.Hours));
