@@ -1,9 +1,10 @@
 
 //#include "draw_functions.h"
 #include "maintence.h"
+#include "rtc_ts.h"
 #include <Pixels_PPI8.h> 
 #include <Pixels_ST7735.h>
-
+#include "main.h"
 
 Pixels pxs(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
@@ -13,7 +14,7 @@ extern osMessageQueueId_t button_Queue;
 int16_t pic_width = 0;
 int16_t pic_height = 0;
 extern TIM_HandleTypeDef htim4;
-
+extern RTC_HandleTypeDef hrtc;
 on_off_t on_off_tmp = { 0, 0 };
 temper_t temp_tmp = { 0, 0 };
 menu_item_t *current_menu = NULL;
@@ -32,6 +33,15 @@ void graphic_task(void *argument)
 	pxs.setFont(ElectroluxSansRegular10a);
 	//TIM4->CCR3 = 64535;
 
+	uint32_t time_rtc_ts = 0;
+	time_rtc_ts = RTC_timestamp_get(6, 7, 2020, 12, 32, 50);
+	
+	/* Set RTC COUNTER MSB word */
+	WRITE_REG(hrtc.Instance->CNTH, (time_rtc_ts >> 16U));
+	/* Set RTC COUNTER LSB word */
+	WRITE_REG(hrtc.Instance->CNTL, (time_rtc_ts & RTC_CNTL_RTC_CNT));
+	
+	//RTC_timestamp_set(time_rtc_ts);
 	
 	osStatus_t status;
 	uint8_t button_status;

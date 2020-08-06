@@ -33,11 +33,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <GNUConfigurationType>Debug</GNUConfigurationType>
     <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
-    <ToolchainVersion>9.3.1/9.2.0/r1</ToolchainVersion>
+    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
-    <ToolchainVersion>9.3.1/9.2.0/r1</ToolchainVersion>
+    <ToolchainVersion>9.3.1/9.2.0/r2</ToolchainVersion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
@@ -89,6 +89,7 @@
     <ClCompile Include="Src\maintence.cpp" />
     <ClCompile Include="Src\ntc_steinhart.cpp" />
     <ClCompile Include="Src\Pixels.cpp" />
+    <ClCompile Include="Src\rtc_ts.cpp" />
     <ClCompile Include="Src\stm32f1xx_it.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />
     <ClCompile Include="Src\stm32f1xx_hal_timebase_tim.c" />
@@ -136,6 +137,7 @@
     <ClInclude Include="Inc\Pixels_Antialiasing.h" />
     <ClInclude Include="Inc\Pixels_PPI8.h" />
     <ClInclude Include="Inc\Pixels_ST7735.h" />
+    <ClInclude Include="Inc\rtc_ts.h" />
     <ClInclude Include="Inc\stm32f1xx_it.h" />
     <ClInclude Include="Inc\stm32_assert.h" />
     <ClInclude Include="Inc\stm32f1xx_hal_conf.h" />

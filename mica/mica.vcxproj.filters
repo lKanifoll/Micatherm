@@ -423,6 +423,9 @@
     <ClCompile Include="Src\maintence.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\rtc_ts.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h">
@@ -471,6 +474,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="Inc\maintence.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\rtc_ts.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

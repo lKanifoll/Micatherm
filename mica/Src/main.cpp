@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "rtc_ts.h"	
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -127,14 +127,13 @@ int main(void)
   MX_DMA_Init();
   MX_SPI1_Init();
 	//MX_IWDG_Init();
-	//MX_RTC_Init();
-	MX_TIM4_Init();
+  MX_RTC_Init();
+  MX_TIM4_Init();
 	
 	  /* USER CODE BEGIN 2 */
-	TIM4->CCR3 = 0;
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+  TIM4->CCR3 = 0;
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
 
-	
 	
   //HAL_ADCEx_Calibration_Start(&hadc1);
 
@@ -388,7 +387,7 @@ static void MX_RTC_Init(void)
   sAlarm.AlarmTime.Minutes = 0x0;
   sAlarm.AlarmTime.Seconds = 0x0;
   sAlarm.Alarm = RTC_ALARM_A;
-  if (HAL_RTC_SetAlarm(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
+	if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
@@ -535,6 +534,9 @@ static void MX_DMA_Init(void)
 	HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
+
+
+
 
 /* USER CODE END 4 */
 

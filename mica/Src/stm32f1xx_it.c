@@ -56,6 +56,7 @@ uint8_t complete_dma = 1;
 /* USER CODE BEGIN 0 */
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern SPI_HandleTypeDef hspi1;
+extern RTC_HandleTypeDef hrtc;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -199,6 +200,31 @@ void SPI1_IRQHandler(void)
 	/* USER CODE BEGIN SPI1_IRQn 1 */
 
 	/* USER CODE END SPI1_IRQn 1 */
+}
+
+void RTC_IRQHandler(void)
+{
+	/* USER CODE BEGIN RTC_IRQn 0 */
+
+	/* USER CODE END RTC_IRQn 0 */
+	HAL_RTCEx_RTCIRQHandler(&hrtc);
+	/* USER CODE BEGIN RTC_IRQn 1 */
+
+	/* USER CODE END RTC_IRQn 1 */
+}
+
+/**
+  * @brief This function handles RTC alarm interrupt through EXTI line 17.
+  */
+void RTC_Alarm_IRQHandler(void)
+{
+	/* USER CODE BEGIN RTC_Alarm_IRQn 0 */
+
+	/* USER CODE END RTC_Alarm_IRQn 0 */
+	HAL_RTC_AlarmIRQHandler(&hrtc);
+	/* USER CODE BEGIN RTC_Alarm_IRQn 1 */
+
+	/* USER CODE END RTC_Alarm_IRQn 1 */
 }
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

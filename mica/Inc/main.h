@@ -45,7 +45,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "cmsis_os.h"
-	
+
 	
 	
 extern SPI_HandleTypeDef hspi1;
