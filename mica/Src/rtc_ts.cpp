@@ -42,6 +42,7 @@ HAL_StatusTypeDef RTC_SetTimestamp(RTC_HandleTypeDef *hrtc, time_t timestamp)
 			return HAL_TIMEOUT;
 		}
 	}
+	return HAL_OK;
 }
 
 time_t RTC_timestamp_get(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t min, uint8_t sec)
@@ -68,3 +69,45 @@ tm RTC_timestamp_set(time_t timestamp)
 	return ts;
 }
 
+HAL_StatusTypeDef RTC_SetTimestampAlarm(RTC_HandleTypeDef *hrtc, time_t timestamp)
+{
+	uint32_t tickstart = 0U;
+
+	tickstart = HAL_GetTick();
+	/* Wait till RTC is in INIT state and if Time out is reached exit */
+	while ((hrtc->Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
+	{
+		if ((HAL_GetTick() - tickstart) >  RTC_TIMEOUT_VALUE)
+		{
+			return HAL_TIMEOUT;
+		}
+	}
+	
+	SET_BIT((hrtc)->Instance->CRL, RTC_CRL_CNF);
+
+	WRITE_REG(hrtc->Instance->ALRH, (timestamp >> 16U));
+	/* Set RTC COUNTER LSB word */
+	WRITE_REG(hrtc->Instance->ALRL, (timestamp & RTC_ALRL_RTC_ALR));	
+	CLEAR_BIT((hrtc)->Instance->CRL, RTC_CRL_CNF);
+
+	tickstart = HAL_GetTick();
+	/* Wait till RTC is in INIT state and if Time out is reached exit */
+	while ((hrtc->Instance->CRL & RTC_CRL_RTOFF) == (uint32_t)RESET)
+	{
+		if ((HAL_GetTick() - tickstart) >  RTC_TIMEOUT_VALUE)
+		{
+			return HAL_TIMEOUT;
+		}
+	}
+	return HAL_OK;
+}
+
+
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+	int i;
+	while (1)
+	{
+		i++;
+	}
+}

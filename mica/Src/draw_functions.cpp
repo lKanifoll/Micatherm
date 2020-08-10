@@ -33,15 +33,16 @@ void graphic_task(void *argument)
 	pxs.setFont(ElectroluxSansRegular10a);
 	//TIM4->CCR3 = 64535;
 
-	uint32_t time_rtc_ts = 0;
-	time_rtc_ts = RTC_timestamp_get(6, 7, 2020, 12, 32, 50);
+	//uint32_t time_rtc_ts = 0;
+	//time_rtc_ts = RTC_timestamp_get(6, 7, 2020, 12, 32, 50);
 	
-	RTC_SetTimestamp(&hrtc, time_rtc_ts);
-	time_rtc_ts = 0;
-	time_rtc_ts = RTC_GetTimestamp(&hrtc, time_rtc_ts);
+	//RTC_SetTimestamp(&hrtc, time_rtc_ts);
+	//RTC_SetTimestampAlarm(&hrtc, time_rtc_ts+10);
+	//time_rtc_ts = 0;
+	//time_rtc_ts = RTC_GetTimestamp(&hrtc, time_rtc_ts);
 	
-
-	
+    draw_main_screen();
+	screen_smooth_transition(1);
 	osStatus_t status;
 	uint8_t button_status;
 	for (;;)
@@ -370,7 +371,7 @@ void draw_submenus()
 		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, pxs.getTextWidth(tmp_t), pxs.getTextLineHeight());
 		pxs.setColor(MAIN_COLOR);
 		
-		pxs.setFont(ElectroluxSansLight40a);
+		pxs.setFont(ElectroluxSansLight41a);
 		sprintf(tmp_t, "%d", temp_tmp.new_temp_p);
 		width_tmp = pxs.getTextWidth(tmp_t);
 		pxs.setColor(MAIN_COLOR);
@@ -425,6 +426,45 @@ void draw_arrows()
 	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (28 / 2), 142, img_down_png_comp);
 }
 
+void draw_main_screen()
+{
+	static int16_t width_tmp;
+	static char tmp_t[2];
+	static char celsius[2] = { '\xB0', '\x43' };
+
+	pxs.setColor(BG_COLOR);
+	pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 26, pxs.getTextWidth(tmp_t), pxs.getTextLineHeight());
+	
+		
+	pxs.setFont(ElectroluxSansLight41a);
+	sprintf(tmp_t, "%d", 25);
+	width_tmp = pxs.getTextWidth(tmp_t);
+	pxs.setColor(MAIN_COLOR);
+		
+	pxs.print((DX0 + DISPLAY_WIDTH / 2) - (width_tmp / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 26, tmp_t);	
+	pxs.setFont(ElectroluxSansLight16a);
+	pxs.print((DX0 + (DISPLAY_WIDTH / 2)) + width_tmp / 2 - 15, DY0 + DISPLAY_HEIGHT / 2 - 26, celsius);
+	
+	pxs.setColor(Orange_COLOR); 
+	pxs.fillRectangle(5, 151, 59, 6);
+	pxs.setColor(Grey_COLOR); 
+	pxs.fillRectangle(65, 151, 59, 6);
+	
+	
+	pxs.setColor(MAIN_COLOR);
+	pxs.fillRectangle(5, 42, 120, 2);
+	
+	pxs.drawCompressedBitmap(5 , 5, img_comfort_act_png_comp);
+	pxs.sizeCompressedBitmap(pic_width, pic_height, img_eco_deact_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), 5, img_eco_deact_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH - (pic_width) - 5, 5, img_anti_deact_png_comp); 
+	
+	pxs.fillRectangle(5, DY0 + DISPLAY_HEIGHT - 56, 120, 2);
+	pxs.sizeCompressedBitmap(pic_width, pic_height, img_timer_deact_png_comp);
+	pxs.drawCompressedBitmap(5, DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_window_act_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_timer_deact_png_comp);
+	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH - (pic_width) - 5, DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_shed_deact_png_comp);
+}
 
 void DrawTextAligment(int16_t x, int16_t y, int16_t w, int16_t h, char* text, bool selected, bool underline, uint8_t border, RGB fore, RGB back)
 {
