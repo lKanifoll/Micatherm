@@ -366,12 +366,12 @@ void draw_submenus()
 		static char tmp_t[2];
 		static char celsius[2] = { '\xB0', '\x43' };
 		draw_arrows();
-
+		pxs.setFont(ElectroluxSansLight41a);
 		pxs.setColor(BG_COLOR);
-		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, pxs.getTextWidth(tmp_t), pxs.getTextLineHeight());
+		pxs.fillRectangle(DX0 + DISPLAY_WIDTH / 2 - (pxs.getTextWidth(tmp_t) / 2) - 15, DY0 + DISPLAY_HEIGHT / 2 - 20, pxs.getTextWidth(tmp_t)+30, pxs.getTextLineHeight());
 		pxs.setColor(MAIN_COLOR);
 		
-		pxs.setFont(ElectroluxSansLight41a);
+		
 		sprintf(tmp_t, "%d", temp_tmp.new_temp_p);
 		width_tmp = pxs.getTextWidth(tmp_t);
 		pxs.setColor(MAIN_COLOR);
