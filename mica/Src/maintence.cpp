@@ -144,24 +144,28 @@ void buttons_task(void *argument)
 	{
 		if (enter_key.button_short_is_pressed())
 		{
+			beep();
 			button_state = enter;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}		
 		
 		if (back_key.button_short_is_pressed())
 		{
+			beep();
 			button_state = back;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);				
 		}
 		
 		if (up_key.button_short_is_pressed() || up_key.button_continious_is_pressed())
 		{
+			beep();
 			button_state = up;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}
 		
 		if (down_key.button_short_is_pressed() || down_key.button_continious_is_pressed())
 		{
+			beep();
 			button_state = down;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}		
@@ -178,9 +182,9 @@ void screen_smooth_transition(uint8_t on_off)
 {
 	if (on_off)
 	{
-		while (TIM4->CCR3 < 65000)
+		while (TIM4->CCR3 < (device_config.brightness ? 15700 : 65000))
 		{
-			TIM4->CCR3 += 750;
+			TIM4->CCR3 += (device_config.brightness ? 250 : 750);
 			osDelay(2);
 		}
 	}
@@ -192,6 +196,13 @@ void screen_smooth_transition(uint8_t on_off)
 			osDelay(1);
 		}
 	}
+}
+void beep()
+{
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+	//HAL_Delay(30);
+	osDelay(30);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_4);
 }
 
 uint32_t get_raw_adc_meas()

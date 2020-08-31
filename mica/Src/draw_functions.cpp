@@ -101,17 +101,21 @@ void enter_confirm()
 
 void menu_back()
 {
-	pxs.clear();
-	if (current_menu->prev_menu == NULL) 
+	if (current_menu != NULL)
 	{
-		current_menu = NULL;
+		pxs.clear();
+		if (current_menu->prev_menu == NULL) 
+		{
+			current_menu = NULL;
+			draw_main_screen();
+		}
+		else
+		{
+			tmp_current_menu = current_menu;
+			current_menu = tmp_current_menu->prev_menu;		
+			draw_main_menues();
+		}	
 	}
-	else
-	{
-		tmp_current_menu = current_menu;
-		current_menu = tmp_current_menu->prev_menu;		
-	}	
-	draw_main_menues();
 }
 
 void next_menu_param()
@@ -428,6 +432,8 @@ void draw_arrows()
 
 void draw_main_screen()
 {
+	screen_smooth_transition(0);
+	
 	static int16_t width_tmp;
 	static char tmp_t[2];
 	static char celsius[2] = { '\xB0', '\x43' };
@@ -464,6 +470,7 @@ void draw_main_screen()
 	pxs.drawCompressedBitmap(5, DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_window_act_png_comp);
 	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH / 2 - (pic_width / 2), DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_timer_deact_png_comp);
 	pxs.drawCompressedBitmap(DX0 + DISPLAY_WIDTH - (pic_width) - 5, DY0 + DISPLAY_HEIGHT - (pic_height) - 17, img_shed_deact_png_comp);
+	screen_smooth_transition(1);
 }
 
 void DrawTextAligment(int16_t x, int16_t y, int16_t w, int16_t h, char* text, bool selected, bool underline, uint8_t border, RGB fore, RGB back)

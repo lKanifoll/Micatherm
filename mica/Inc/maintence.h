@@ -28,6 +28,7 @@ typedef enum
 	down
 } button_state;
 
+
 typedef struct 
 {
 	uint8_t on_off;
@@ -125,3 +126,4 @@ void screen_smooth_transition(uint8_t on_off);
 uint32_t get_raw_adc_meas();
 void prepare_settings(menu_item_t *current_menu);
 void accept_settings(menu_item_t *current_menu);
+void beep();
