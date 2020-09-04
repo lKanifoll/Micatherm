@@ -97,7 +97,7 @@
     <DebugMethod>
       <ID>com.sysprogs.arm.openocd</ID>
       <InterfaceID>stlink-v2</InterfaceID>
-      <InterfaceSerialNumber>5&amp;18923BAB&amp;0&amp;9</InterfaceSerialNumber>
+      <InterfaceSerialNumber>5&amp;18923BAB&amp;0&amp;1</InterfaceSerialNumber>
       <Configuration xsi:type="com.visualgdb.edp.openocd.settings">
         <CommandLine>-f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c init -c "reset init"</CommandLine>
         <ExtraParameters>
@@ -148,16 +148,6 @@
         <ExplicitEndOfFLASH>0</ExplicitEndOfFLASH>
         <ExplicitEndOfRAM>0</ExplicitEndOfRAM>
       </InstrumentedFunctions>
-      <RTOSFeatures>
-        <RTOSFeatureSetting>
-          <FeatureID>com.sysprogs.analysis.thread.timing</FeatureID>
-          <Enabled>true</Enabled>
-        </RTOSFeatureSetting>
-        <RTOSFeatureSetting>
-          <FeatureID>com.sysprogs.analysis.freertos.queues</FeatureID>
-          <Enabled>true</Enabled>
-        </RTOSFeatureSetting>
-      </RTOSFeatures>
     </DynamicAnalysisSettings>
     <EndOfStackSymbol>_estack</EndOfStackSymbol>
     <TimestampProviderTicksPerSecond>0</TimestampProviderTicksPerSecond>

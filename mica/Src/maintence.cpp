@@ -1,6 +1,6 @@
 
 #include "maintence.h"
-#include "buttons.h"
+#include "buttons_xw09a.h"
 #include "ntc_steinhart.h"
 
 extern ADC_HandleTypeDef hadc1;
@@ -15,15 +15,18 @@ extern menu_item_t *current_menu;
 extern settings_t device_config;
 
 
-button enter_key(key2_GPIO_Port, key2_Pin);
-button back_key(key3_GPIO_Port, key3_Pin);
-button down_key(key4_GPIO_Port, key4_Pin);
-button up_key(key0_GPIO_Port, key0_Pin);
-button power_key(key1_GPIO_Port, key1_Pin);
-button window_key(key5_GPIO_Port, key5_Pin);
+button enter_key(ENTER);
+button back_key(BACK);
+button down_key(DOWN);
+button up_key(UP);
+button power_key(POWER);
+button window_key(WINDOW);
 
 const uint32_t FlashSize = 512 * 1024;
 const uint32_t InfoSize = 2 * 1024;
+
+
+
 
 
 void prepare_settings(menu_item_t *current_menu)
@@ -144,28 +147,28 @@ void buttons_task(void *argument)
 	{
 		if (enter_key.button_short_is_pressed())
 		{
-			beep();
+			//beep();
 			button_state = enter;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}		
 		
 		if (back_key.button_short_is_pressed())
 		{
-			beep();
+			//beep();
 			button_state = back;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);				
 		}
 		
 		if (up_key.button_short_is_pressed() || up_key.button_continious_is_pressed())
 		{
-			beep();
+			//beep();
 			button_state = up;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}
 		
 		if (down_key.button_short_is_pressed() || down_key.button_continious_is_pressed())
 		{
-			beep();
+			//beep();
 			button_state = down;
 			osMessageQueuePut(button_Queue, &button_state, 0U, 0U);		
 		}		
@@ -182,17 +185,17 @@ void screen_smooth_transition(uint8_t on_off)
 {
 	if (on_off)
 	{
-		while (TIM4->CCR3 < (device_config.brightness ? 15700 : 65000))
+		while (TIM1->CCR2 < (device_config.brightness ? 15700 : 65000))
 		{
-			TIM4->CCR3 += (device_config.brightness ? 250 : 750);
+			TIM1->CCR2 += (device_config.brightness ? 250 : 750);
 			osDelay(2);
 		}
 	}
 	else
 	{
-		while (TIM4->CCR3 > 1000)
+		while (TIM1->CCR2 > 1000)
 		{
-			TIM4->CCR3 -= 5000;
+			TIM1->CCR2 -= 5000;
 			osDelay(1);
 		}
 	}

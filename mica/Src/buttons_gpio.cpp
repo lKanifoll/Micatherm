@@ -1,5 +1,5 @@
 #include "main.h"
-#include "buttons.h"
+#include "buttons_gpio.h"
 
 
 
@@ -40,6 +40,7 @@ void button::check_button_state()
 	{
 		pressed_time = osKernelGetTickCount();
 	}
+	
 	/*short press button*/
 	if (((osKernelGetTickCount() - pressed_time) == short_press_time) && (!button_short_pressed) && button_state)
 	{

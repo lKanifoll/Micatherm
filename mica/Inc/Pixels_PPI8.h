@@ -47,7 +47,7 @@ protected:
     void writeCmd(uint8_t b) 
 		{
 			//LL_GPIO_ResetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
-			GPIOB->BSRR = GPIO_BSRR_BR6;
+			GPIOC->BSRR = GPIO_BSRR_BR4;
 			
 			//LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | b);
 			HAL_SPI_Transmit(&hspi1, &b, 1, 0);
@@ -57,7 +57,7 @@ protected:
     void writeData(uint8_t data) 
 		{
 			//LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
-			GPIOB->BSRR = GPIO_BSRR_BS6;
+			GPIOC->BSRR = GPIO_BSRR_BS4;
 			//LL_GPIO_WriteOutputPort(GPIOA, data);
 			HAL_SPI_Transmit(&hspi1, &data, 1, 0);
 			//pulseLowWR;
@@ -91,7 +91,7 @@ protected:
 		{
 			//LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
 			uint8_t ff14[2] = { hi, lo };
-			GPIOB->BSRR = GPIO_BSRR_BS6;
+			GPIOC->BSRR = GPIO_BSRR_BS4;
 			HAL_SPI_Transmit(&hspi1, ff14, 2,0);
 			//HAL_SPI_Transmit_DMA(&hspi1, &lo, 1);
 			//LL_GPIO_WriteOutputPort(GPIOA, (LL_GPIO_ReadOutputPort(GPIOA) & 0xFF00) | hi);
@@ -102,7 +102,7 @@ protected:
     void writeDataTwice(uint8_t b) 
 		{
 			//LL_GPIO_SetOutputPin(LCD_A0_GPIO_Port, LCD_A0_Pin);
-			GPIOB->BSRR = GPIO_BSRR_BS6;
+			GPIOC->BSRR = GPIO_BSRR_BS4;
 			LL_GPIO_WriteOutputPort(GPIOA, b);
 			//pulseLowWR;
 			LL_GPIO_WriteOutputPort(GPIOA, b);

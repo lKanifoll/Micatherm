@@ -47,13 +47,13 @@
       <PreprocessorDefinitions>DEBUG=1;USE_FULL_LL_DRIVER;USE_NEWLIB_REENTRANT;flash_layout;STM32F103xB;USE_FREERTOS;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions />
       <CLanguageStandard />
+      <Optimization>O0</Optimization>
     </ClCompile>
     <Link>
       <LibrarySearchDirectories>%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
       <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <AdditionalOptions />
-      <LinkerScript />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -78,12 +78,13 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_i2c.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_spi.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_rcc.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_rcc_ex.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_gpio.c" />
     <ClCompile Include="Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
-    <ClCompile Include="Src\buttons.cpp" />
+    <ClCompile Include="Src\buttons_xw09a.cpp" />
     <ClCompile Include="Src\draw_functions.cpp" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\maintence.cpp" />
@@ -123,8 +124,9 @@
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim.c" />
     <ClCompile Include="Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim_ex.c" />
     <None Include="stm32.props" />
+    <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_i2c.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_spi.h" />
-    <ClInclude Include="Inc\buttons.h" />
+    <ClInclude Include="Inc\buttons_xw09a.h" />
     <ClInclude Include="Inc\draw_functions.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h" />
     <ClInclude Include="Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h" />

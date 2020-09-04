@@ -18,6 +18,7 @@
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.mcuoptions.ignore_startup_file</Key>
+        <Value />
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.toolchainoptions.arm.libctype</Key>
@@ -73,6 +74,14 @@
       <KeyValue>
         <Key>com.sysprogs.efp.profiling.hold_interrupts</Key>
         <Value />
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.bspoptions.stackheap.stacksize</Key>
+        <Value>4096</Value>
+      </KeyValue>
+      <KeyValue>
+        <Key>com.sysprogs.bspoptions.stackheap.heapsize</Key>
+        <Value>8192</Value>
       </KeyValue>
     </Entries>
   </FrameworkProperties>

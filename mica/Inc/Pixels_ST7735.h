@@ -296,7 +296,7 @@ void Pixels::quickFill (int color, int16_t x1, int16_t y1, int16_t x2, int16_t y
 	//uint8_t *ass1 = (uint8_t *)ass;
 	//for(int16_t i = 0 ; i < counter*2 ; i++) {
 	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)ass, counter*2);
-	while (complete_dma) ;
+	while (complete_dma);
 	//setCurrentPixel(color);
 	//HAL_SPI_Transmit(&hspi1, &hi, 1,0);
 	//HAL_SPI_Transmit(&hspi1, &lo, 1,0);
